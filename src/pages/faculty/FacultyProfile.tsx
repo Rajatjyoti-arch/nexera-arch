@@ -7,10 +7,18 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Edit2, Save, X, Loader2, Camera, Mail, Building2, Briefcase, Clock, BookOpen } from "lucide-react";
+import { Edit2, Save, X, Loader2, Camera, Mail, Building2, Briefcase, Clock, BookOpen, Plus } from "lucide-react";
 import { useFacultyFullProfile, useUpdateFacultyProfile } from "@/hooks/useProfile";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { motion, AnimatePresence } from "framer-motion";
+
+const suggestedSubjects = [
+  "Data Structures", "Algorithms", "Database Management", "Operating Systems",
+  "Computer Networks", "Machine Learning", "Artificial Intelligence", "Web Development",
+  "Software Engineering", "Discrete Mathematics", "Theory of Computation", "Compiler Design",
+  "Computer Architecture", "Cyber Security", "Cloud Computing", "Data Science"
+];
 
 export default function FacultyProfile() {
   const { user } = useAuth();
@@ -20,6 +28,8 @@ export default function FacultyProfile() {
   
   const [isEditing, setIsEditing] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [newSubject, setNewSubject] = useState("");
+  const [isAddingSubject, setIsAddingSubject] = useState(false);
   const [editData, setEditData] = useState({
     name: "",
     department: "",
@@ -122,6 +132,50 @@ export default function FacultyProfile() {
       });
     }
   };
+
+  const handleAddSubject = async (subject: string) => {
+    const trimmedSubject = subject.trim();
+    if (!trimmedSubject) return;
+    
+    const currentSubjects = profile?.subjects || [];
+    if (currentSubjects.includes(trimmedSubject)) {
+      toast.error("Subject already added");
+      return;
+    }
+
+    setIsAddingSubject(true);
+    try {
+      await updateProfile.mutateAsync({
+        subjects: [...currentSubjects, trimmedSubject],
+      });
+      setNewSubject("");
+      toast.success("Subject added");
+      refetch();
+    } catch (error) {
+      toast.error("Failed to add subject");
+    } finally {
+      setIsAddingSubject(false);
+    }
+  };
+
+  const handleRemoveSubject = async (subjectToRemove: string) => {
+    const currentSubjects = profile?.subjects || [];
+    const updatedSubjects = currentSubjects.filter(s => s !== subjectToRemove);
+
+    try {
+      await updateProfile.mutateAsync({
+        subjects: updatedSubjects,
+      });
+      toast.success("Subject removed");
+      refetch();
+    } catch (error) {
+      toast.error("Failed to remove subject");
+    }
+  };
+
+  const availableSuggestions = suggestedSubjects.filter(
+    s => !(profile?.subjects || []).includes(s)
+  ).slice(0, 6);
 
   if (isLoading) {
     return (
@@ -269,25 +323,6 @@ export default function FacultyProfile() {
               </div>
             </div>
             
-            {/* Subjects */}
-            <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-muted">
-                <BookOpen className="w-4 h-4 text-muted-foreground" />
-              </div>
-              <div className="flex-1">
-                <Label className="text-xs text-muted-foreground">Subjects</Label>
-                {profile?.subjects && profile.subjects.length > 0 ? (
-                  <div className="flex flex-wrap gap-2 mt-1">
-                    {profile.subjects.map((subject, idx) => (
-                      <Badge key={idx} variant="outline">{subject}</Badge>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground italic">No subjects assigned</p>
-                )}
-              </div>
-            </div>
-            
             {/* Office Hours */}
             <div className="flex items-start gap-3">
               <div className="p-2 rounded-lg bg-muted">
@@ -307,6 +342,94 @@ export default function FacultyProfile() {
                 )}
               </div>
             </div>
+          </div>
+        </Card>
+
+        {/* Subjects Card */}
+        <Card className="p-6 animate-fade-in">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-2 rounded-lg bg-muted">
+              <BookOpen className="w-4 h-4 text-muted-foreground" />
+            </div>
+            <div>
+              <Label className="text-sm font-semibold">Subjects You Teach</Label>
+              <p className="text-xs text-muted-foreground">Add or remove subjects from your profile</p>
+            </div>
+          </div>
+
+          {/* Current Subjects */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            <AnimatePresence>
+              {(profile?.subjects || []).map((subject, idx) => (
+                <motion.div
+                  key={subject}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Badge 
+                    variant="secondary" 
+                    className="pl-3 pr-1 py-1.5 flex items-center gap-2 group"
+                  >
+                    {subject}
+                    <button
+                      onClick={() => handleRemoveSubject(subject)}
+                      className="p-0.5 rounded-full hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+            {(!profile?.subjects || profile.subjects.length === 0) && (
+              <p className="text-sm text-muted-foreground italic">No subjects added yet</p>
+            )}
+          </div>
+
+          {/* Add Subject Input */}
+          <div className="space-y-3">
+            <div className="flex gap-2">
+              <Input
+                value={newSubject}
+                onChange={(e) => setNewSubject(e.target.value)}
+                placeholder="Add a subject..."
+                className="flex-1"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleAddSubject(newSubject);
+                  }
+                }}
+              />
+              <Button
+                onClick={() => handleAddSubject(newSubject)}
+                disabled={isAddingSubject || !newSubject.trim()}
+                size="icon"
+              >
+                {isAddingSubject ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Plus className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
+
+            {/* Suggested Subjects */}
+            {availableSuggestions.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {availableSuggestions.map(subject => (
+                  <button
+                    key={subject}
+                    onClick={() => handleAddSubject(subject)}
+                    className="px-3 py-1.5 rounded-lg bg-muted/50 border border-dashed border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all"
+                  >
+                    + {subject}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </Card>
 
