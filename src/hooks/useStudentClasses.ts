@@ -557,7 +557,7 @@ export function useStudentAttendanceSummary() {
   });
 }
 
-// Hook for real-time attendance subscription (can be used in components)
+// Hook for real-time attendance subscription with toast notifications
 export function useRealtimeAttendance() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -576,7 +576,28 @@ export function useRealtimeAttendance() {
           filter: `student_id=eq.${user.id}`,
         },
         (payload) => {
-          console.log('New attendance record:', payload.new);
+          const newRecord = payload.new as { status: string; date: string; class_id: string };
+          console.log('New attendance record:', newRecord);
+          
+          // Show toast notification
+          const status = newRecord.status;
+          const statusLabels: Record<string, { label: string; emoji: string }> = {
+            present: { label: 'Present', emoji: '✅' },
+            absent: { label: 'Absent', emoji: '❌' },
+            late: { label: 'Late', emoji: '⏰' },
+            excused: { label: 'Excused', emoji: '📝' },
+          };
+          
+          const statusInfo = statusLabels[status] || { label: status, emoji: '📋' };
+          
+          // Import toast dynamically to avoid circular deps
+          import('sonner').then(({ toast }) => {
+            toast(`${statusInfo.emoji} Attendance Marked`, {
+              description: `You have been marked as ${statusInfo.label} for today's class`,
+              duration: 5000,
+            });
+          });
+          
           // Invalidate queries to trigger refetch
           queryClient.invalidateQueries({ queryKey: ['studentClasses'] });
           queryClient.invalidateQueries({ queryKey: ['studentAttendanceSummary'] });
@@ -591,7 +612,26 @@ export function useRealtimeAttendance() {
           filter: `student_id=eq.${user.id}`,
         },
         (payload) => {
-          console.log('Attendance updated:', payload.new);
+          const updatedRecord = payload.new as { status: string; date: string };
+          console.log('Attendance updated:', updatedRecord);
+          
+          const status = updatedRecord.status;
+          const statusLabels: Record<string, { label: string; emoji: string }> = {
+            present: { label: 'Present', emoji: '✅' },
+            absent: { label: 'Absent', emoji: '❌' },
+            late: { label: 'Late', emoji: '⏰' },
+            excused: { label: 'Excused', emoji: '📝' },
+          };
+          
+          const statusInfo = statusLabels[status] || { label: status, emoji: '📋' };
+          
+          import('sonner').then(({ toast }) => {
+            toast(`${statusInfo.emoji} Attendance Updated`, {
+              description: `Your attendance has been updated to ${statusInfo.label}`,
+              duration: 5000,
+            });
+          });
+          
           queryClient.invalidateQueries({ queryKey: ['studentClasses'] });
           queryClient.invalidateQueries({ queryKey: ['studentAttendanceSummary'] });
         }
