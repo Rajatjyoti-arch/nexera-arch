@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import FacultyLayout from "@/components/layouts/FacultyLayout";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,84 +13,140 @@ import {
   Smile,
   ChevronLeft,
   Sparkles,
-  MessageCircle
+  MessageCircle,
+  Loader2,
+  Users
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion, AnimatePresence } from "framer-motion";
-
-interface Chat {
-  id: string;
-  name: string;
-  type: "student" | "group";
-  avatar?: string;
-  lastMessage: string;
-  time: string;
-  unread: number;
-  online: boolean;
-}
-
-interface Message {
-  id: string;
-  content: string;
-  senderId: string;
-  timestamp: string;
-  isMine: boolean;
-}
-
-const mockChats: Chat[] = [
-  { id: "1", name: "Priyanshu Sharma", type: "student", lastMessage: "Thank you for the feedback!", time: "5m", unread: 0, online: true },
-  { id: "2", name: "CSE 2024 - Section A", type: "group", lastMessage: "Assignment deadline extended", time: "1h", unread: 0, online: false },
-  { id: "3", name: "Aisha Khan", type: "student", lastMessage: "Question about the project", time: "2h", unread: 1, online: true },
-  { id: "4", name: "B.Tech CSE 3rd Year", type: "group", lastMessage: "Lab session tomorrow", time: "1d", unread: 0, online: false },
-];
-
-const initialMessages: Message[] = [
-  { id: "1", content: "Hello Professor, I had a doubt regarding the last lecture.", senderId: "other", timestamp: "09:00 AM", isMine: false },
-  { id: "2", content: "Sure, what specifically are you struggling with?", senderId: "me", timestamp: "09:05 AM", isMine: true },
-  { id: "3", content: "The part about time complexity in recursive functions.", senderId: "other", timestamp: "09:10 AM", isMine: false },
-  { id: "4", content: "I'll upload some extra resources on the portal today.", senderId: "me", timestamp: "09:15 AM", isMine: true },
-  { id: "5", content: "Thank you for the feedback!", senderId: "other", timestamp: "09:20 AM", isMine: false },
-];
+import { useAuth } from "@/contexts/AuthContext";
+import { useChatsWithUnread, useRealtimeMessages, useRealtimeChatMessages, useMarkChatAsRead, ChatPreview } from "@/hooks/useMessages";
+import { useChatMessages, useSendMessage, useFindOrCreateDirectChat, Message } from "@/hooks/useChat";
+import { useFacultyStudents } from "@/hooks/useFaculty";
+import { useQueryClient } from "@tanstack/react-query";
+import { format, isToday, isYesterday, parseISO } from "date-fns";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function FacultyChats() {
-  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const [selectedChat, setSelectedChat] = useState<ChatPreview | null>(null);
   const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [chats, setChats] = useState<Chat[]>(mockChats);
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [isNewChatOpen, setIsNewChatOpen] = useState(false);
+  const [studentSearch, setStudentSearch] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Fetch chats with unread counts
+  const { data: chats = [], isLoading: chatsLoading, refetch: refetchChats } = useChatsWithUnread();
+  
+  // Fetch messages for selected chat
+  const { data: messages = [], isLoading: messagesLoading, refetch: refetchMessages } = useChatMessages(selectedChat?.id || null);
+  
+  // Mutations
+  const sendMessage = useSendMessage();
+  const markAsRead = useMarkChatAsRead();
+  const findOrCreateChat = useFindOrCreateDirectChat();
+  
+  // Fetch students for new chat
+  const { data: students = [] } = useFacultyStudents();
+
+  // Realtime subscriptions
+  const handleGlobalMessageUpdate = useCallback(() => {
+    refetchChats();
+  }, [refetchChats]);
+
+  const handleChatMessageUpdate = useCallback(() => {
+    refetchMessages();
+  }, [refetchMessages]);
+
+  useRealtimeMessages(handleGlobalMessageUpdate);
+  useRealtimeChatMessages(selectedChat?.id || null, handleChatMessageUpdate);
+
+  // Scroll to bottom on new messages
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages, selectedChat]);
+  }, [messages]);
+
+  // Mark chat as read when selected
+  useEffect(() => {
+    if (selectedChat?.id && selectedChat.unreadCount > 0) {
+      markAsRead.mutate(selectedChat.id);
+    }
+  }, [selectedChat?.id]);
 
   const filteredChats = chats.filter(chat =>
-    chat.name.toLowerCase().includes(searchQuery.toLowerCase())
+    (chat.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+    chat.participants.some(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const handleSend = () => {
-    if (!message.trim()) return;
+  const filteredStudents = students.filter(student =>
+    student.name.toLowerCase().includes(studentSearch.toLowerCase()) ||
+    student.email.toLowerCase().includes(studentSearch.toLowerCase())
+  );
 
-    const newMsg: Message = {
-      id: Date.now().toString(),
-      content: message,
-      senderId: "me",
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      isMine: true,
-    };
+  const handleSend = async () => {
+    if (!message.trim() || !selectedChat?.id) return;
 
-    setMessages(prev => [...prev, newMsg]);
-    setMessage("");
-
-    if (selectedChat) {
-      setChats(prev => prev.map(c =>
-        c.id === selectedChat.id ? { ...c, lastMessage: "You: " + message, time: "Now", unread: 0 } : c
-      ));
+    try {
+      await sendMessage.mutateAsync({
+        chatId: selectedChat.id,
+        content: message.trim(),
+      });
+      setMessage("");
+    } catch (error) {
+      toast.error("Failed to send message");
     }
+  };
+
+  const handleStartChat = async (studentUserId: string) => {
+    try {
+      const chat = await findOrCreateChat.mutateAsync(studentUserId);
+      setIsNewChatOpen(false);
+      setStudentSearch("");
+      // Refetch chats and select the new one
+      await refetchChats();
+      const newChat = chats.find(c => c.id === chat.id);
+      if (newChat) {
+        setSelectedChat(newChat);
+      }
+    } catch (error) {
+      toast.error("Failed to start conversation");
+    }
+  };
+
+  const formatTime = (dateString: string | null) => {
+    if (!dateString) return '';
+    const date = parseISO(dateString);
+    if (isToday(date)) return format(date, 'h:mm a');
+    if (isYesterday(date)) return 'Yesterday';
+    return format(date, 'MMM d');
+  };
+
+  const formatMessageTime = (dateString: string) => {
+    return format(parseISO(dateString), 'h:mm a');
+  };
+
+  const getChatDisplayName = (chat: ChatPreview) => {
+    if (chat.name) return chat.name;
+    if (chat.participants.length > 0) return chat.participants[0].name;
+    return 'Unknown';
+  };
+
+  const getChatAvatar = (chat: ChatPreview) => {
+    if (chat.participants.length > 0) return chat.participants[0].avatarUrl;
+    return null;
   };
 
   return (
@@ -104,14 +160,60 @@ export default function FacultyChats() {
           <div className="p-6 border-b border-border">
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-2xl font-black tracking-tight">Messages</h1>
-              <Button variant="ghost" size="icon" className="rounded-xl bg-secondary">
-                <Plus className="w-5 h-5" />
-              </Button>
+              <Dialog open={isNewChatOpen} onOpenChange={setIsNewChatOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-xl bg-secondary">
+                    <Plus className="w-5 h-5" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-card border-border">
+                  <DialogHeader>
+                    <DialogTitle>Start New Conversation</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 pt-4">
+                    <Input
+                      placeholder="Search students..."
+                      value={studentSearch}
+                      onChange={(e) => setStudentSearch(e.target.value)}
+                      className="bg-secondary/20 border-border"
+                    />
+                    <ScrollArea className="h-64">
+                      <div className="space-y-2">
+                        {filteredStudents.length === 0 ? (
+                          <p className="text-sm text-muted-foreground text-center py-4">
+                            No students found
+                          </p>
+                        ) : (
+                          filteredStudents.map((student) => (
+                            <button
+                              key={student.user_id}
+                              onClick={() => handleStartChat(student.user_id)}
+                              disabled={findOrCreateChat.isPending}
+                              className="w-full p-3 flex items-center gap-3 rounded-xl hover:bg-secondary transition-colors"
+                            >
+                              <Avatar className="h-10 w-10">
+                                <AvatarImage src={student.avatar_url || undefined} />
+                                <AvatarFallback className="bg-primary text-primary-foreground">
+                                  {student.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="text-left">
+                                <p className="font-medium">{student.name}</p>
+                                <p className="text-xs text-muted-foreground">{student.email}</p>
+                              </div>
+                            </button>
+                          ))
+                        )}
+                      </div>
+                    </ScrollArea>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/60" />
               <Input
-                placeholder="Search students/groups..."
+                placeholder="Search conversations..."
                 className="h-12 pl-11 bg-secondary/20 border-border rounded-2xl focus:border-primary/50 transition-all"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -120,56 +222,77 @@ export default function FacultyChats() {
           </div>
 
           <ScrollArea className="flex-1">
-            <div className="p-2 space-y-1">
-              {filteredChats.map((chat) => (
-                <button
-                  key={chat.id}
-                  onClick={() => setSelectedChat(chat)}
-                  className={cn(
-                    "w-full p-4 flex items-center gap-4 rounded-2xl transition-all duration-300 group",
-                    selectedChat?.id === chat.id
-                      ? "bg-faculty text-black shadow-glow-sm"
-                      : "hover:bg-secondary"
-                  )}
-                >
-                  <div className="relative">
-                    <Avatar className="h-14 w-14 border-2 border-border group-hover:border-border/80 transition-colors">
-                      <AvatarImage src={chat.avatar} />
-                      <AvatarFallback className={cn(
-                        "font-bold",
-                        selectedChat?.id === chat.id ? "bg-white/20 text-black" : "bg-faculty text-black"
-                      )}>
-                        {chat.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                    {chat.online && chat.type === "student" && (
-                      <span className={cn(
-                        "absolute bottom-0 right-0 w-4 h-4 rounded-full border-4",
-                        selectedChat?.id === chat.id ? "bg-white border-faculty" : "bg-online border-card"
-                      )} />
+            {chatsLoading ? (
+              <div className="flex items-center justify-center py-10">
+                <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : filteredChats.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+                <MessageCircle className="w-10 h-10 text-muted-foreground/50 mb-3" />
+                <p className="text-sm text-muted-foreground">
+                  {searchQuery ? "No conversations found" : "No conversations yet"}
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Click + to start a new chat
+                </p>
+              </div>
+            ) : (
+              <div className="p-2 space-y-1">
+                {filteredChats.map((chat) => (
+                  <button
+                    key={chat.id}
+                    onClick={() => setSelectedChat(chat)}
+                    className={cn(
+                      "w-full p-4 flex items-center gap-4 rounded-2xl transition-all duration-300 group",
+                      selectedChat?.id === chat.id
+                        ? "bg-faculty text-black shadow-glow-sm"
+                        : "hover:bg-secondary"
                     )}
-                  </div>
-                  <div className="flex-1 min-w-0 text-left">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold truncate">{chat.name}</span>
-                      <span className={cn(
-                        "text-[10px] font-medium uppercase tracking-wider",
-                        selectedChat?.id === chat.id ? "text-black/90" : "text-foreground/60"
-                      )}>{chat.time}</span>
+                  >
+                    <div className="relative">
+                      <Avatar className="h-14 w-14 border-2 border-border group-hover:border-border/80 transition-colors">
+                        <AvatarImage src={getChatAvatar(chat) || undefined} />
+                        <AvatarFallback className={cn(
+                          "font-bold",
+                          selectedChat?.id === chat.id ? "bg-white/20 text-black" : "bg-faculty text-black"
+                        )}>
+                          {chat.type === 'group' ? (
+                            <Users className="w-5 h-5" />
+                          ) : (
+                            getChatDisplayName(chat).split(" ").map(n => n[0]).join("").slice(0, 2)
+                          )}
+                        </AvatarFallback>
+                      </Avatar>
                     </div>
-                    <p className={cn(
-                      "text-sm truncate",
-                      selectedChat?.id === chat.id ? "text-black" : "text-foreground/60"
-                    )}>{chat.lastMessage}</p>
-                  </div>
-                  {chat.unread > 0 && selectedChat?.id !== chat.id && (
-                    <span className="min-w-6 h-6 rounded-full bg-faculty text-black text-[10px] font-black flex items-center justify-center shadow-glow-sm">
-                      {chat.unread}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
+                    <div className="flex-1 min-w-0 text-left">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-bold truncate flex items-center gap-2">
+                          {getChatDisplayName(chat)}
+                          {chat.type === 'group' && <Sparkles className="w-3 h-3 text-faculty" />}
+                        </span>
+                        <span className={cn(
+                          "text-[10px] font-medium uppercase tracking-wider",
+                          selectedChat?.id === chat.id ? "text-black/90" : "text-foreground/60"
+                        )}>
+                          {formatTime(chat.lastMessageAt)}
+                        </span>
+                      </div>
+                      <p className={cn(
+                        "text-sm truncate",
+                        selectedChat?.id === chat.id ? "text-black" : "text-foreground/60"
+                      )}>
+                        {chat.lastMessage || "No messages yet"}
+                      </p>
+                    </div>
+                    {chat.unreadCount > 0 && selectedChat?.id !== chat.id && (
+                      <span className="min-w-6 h-6 rounded-full bg-faculty text-black text-[10px] font-black flex items-center justify-center shadow-glow-sm">
+                        {chat.unreadCount}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
           </ScrollArea>
         </div>
 
@@ -193,22 +316,27 @@ export default function FacultyChats() {
                   </Button>
                   <div className="relative">
                     <Avatar className="h-12 w-12 border-2 border-faculty/20">
-                      <AvatarImage src={selectedChat.avatar} />
+                      <AvatarImage src={getChatAvatar(selectedChat) || undefined} />
                       <AvatarFallback className="bg-faculty text-black font-bold">
-                        {selectedChat.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                        {selectedChat.type === 'group' ? (
+                          <Users className="w-5 h-5" />
+                        ) : (
+                          getChatDisplayName(selectedChat).split(" ").map(n => n[0]).join("").slice(0, 2)
+                        )}
                       </AvatarFallback>
                     </Avatar>
-                    {selectedChat.online && (
-                      <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-online rounded-full border-2 border-background" />
-                    )}
                   </div>
                   <div>
                     <h2 className="font-bold flex items-center gap-2">
-                      {selectedChat.name}
+                      {getChatDisplayName(selectedChat)}
                       {selectedChat.type === "group" && <Sparkles className="w-3 h-3 text-faculty" />}
                     </h2>
                     <p className="text-xs text-foreground/60">
-                      {selectedChat.online ? "Active now" : "Last seen 2h ago"}
+                      {selectedChat.type === 'group' 
+                        ? `${selectedChat.participants.length + 1} members`
+                        : selectedChat.participants.length > 0 
+                          ? selectedChat.participants[0].name
+                          : 'Direct message'}
                     </p>
                   </div>
                 </div>
@@ -221,37 +349,67 @@ export default function FacultyChats() {
 
               {/* Messages Area */}
               <ScrollArea className="flex-1 p-6">
-                <div className="space-y-6">
-                  <AnimatePresence initial={false}>
-                    {messages.map((msg) => (
-                      <motion.div
-                        key={msg.id}
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        className={cn(
-                          "flex",
-                          msg.isMine ? "justify-end" : "justify-start"
-                        )}
-                      >
-                        <div
-                          className={cn(
-                            "max-w-[70%] px-5 py-3.5 shadow-lg",
-                            msg.isMine ? "chat-bubble-sent bg-faculty" : "chat-bubble-received"
-                          )}
-                        >
-                          <p className="text-sm leading-relaxed">{msg.content}</p>
-                          <p className={cn(
-                            "text-[10px] mt-2 font-medium opacity-70",
-                            msg.isMine ? "text-right" : "text-left"
-                          )}>
-                            {msg.timestamp}
-                          </p>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                  <div ref={scrollRef} />
-                </div>
+                {messagesLoading ? (
+                  <div className="flex items-center justify-center h-full">
+                    <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+                  </div>
+                ) : messages.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full text-center">
+                    <MessageCircle className="w-12 h-12 text-muted-foreground/30 mb-3" />
+                    <p className="text-muted-foreground">No messages yet</p>
+                    <p className="text-sm text-muted-foreground/60">Send a message to start the conversation</p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    <AnimatePresence initial={false}>
+                      {messages.map((msg) => {
+                        const isMine = msg.sender_id === user?.id;
+                        return (
+                          <motion.div
+                            key={msg.id}
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            className={cn(
+                              "flex",
+                              isMine ? "justify-end" : "justify-start"
+                            )}
+                          >
+                            <div className="flex items-end gap-2 max-w-[70%]">
+                              {!isMine && (
+                                <Avatar className="h-8 w-8">
+                                  <AvatarImage src={msg.sender?.avatar_url || undefined} />
+                                  <AvatarFallback className="bg-secondary text-xs">
+                                    {(msg.sender?.name || '?').split(" ").map(n => n[0]).join("").slice(0, 2)}
+                                  </AvatarFallback>
+                                </Avatar>
+                              )}
+                              <div
+                                className={cn(
+                                  "px-5 py-3.5 shadow-lg",
+                                  isMine ? "chat-bubble-sent bg-faculty" : "chat-bubble-received"
+                                )}
+                              >
+                                {!isMine && msg.sender?.name && (
+                                  <p className="text-[10px] font-bold text-foreground/60 mb-1">
+                                    {msg.sender.name}
+                                  </p>
+                                )}
+                                <p className="text-sm leading-relaxed">{msg.content}</p>
+                                <p className={cn(
+                                  "text-[10px] mt-2 font-medium opacity-70",
+                                  isMine ? "text-right" : "text-left"
+                                )}>
+                                  {formatMessageTime(msg.created_at)}
+                                </p>
+                              </div>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </AnimatePresence>
+                    <div ref={scrollRef} />
+                  </div>
+                )}
               </ScrollArea>
 
               {/* Input Area */}
@@ -266,7 +424,7 @@ export default function FacultyChats() {
                       placeholder="Type a message..."
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                      onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
                       className="h-14 bg-secondary/20 border-border rounded-2xl px-5 pr-12 focus:border-faculty/50 transition-all"
                     />
                     <Button variant="ghost" size="icon" className="absolute right-2 text-foreground/60 hover:text-faculty">
@@ -275,10 +433,15 @@ export default function FacultyChats() {
                   </div>
                   <Button
                     onClick={handleSend}
+                    disabled={!message.trim() || sendMessage.isPending}
                     size="icon"
-                    className="h-14 w-14 rounded-2xl bg-faculty hover:bg-faculty/90 border-0 shadow-glow group"
+                    className="h-14 w-14 rounded-2xl bg-faculty hover:bg-faculty/90 border-0 shadow-glow group disabled:opacity-50"
                   >
-                    <Send className="w-6 h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform text-black" />
+                    {sendMessage.isPending ? (
+                      <Loader2 className="w-6 h-6 animate-spin text-black" />
+                    ) : (
+                      <Send className="w-6 h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform text-black" />
+                    )}
                   </Button>
                 </div>
               </div>
@@ -290,7 +453,7 @@ export default function FacultyChats() {
               </div>
               <h2 className="text-2xl font-black mb-2">Faculty Inbox</h2>
               <p className="text-foreground/60 max-w-xs">
-                Select a student or group conversation to start mentoring.
+                Select a conversation or start a new one with a student.
               </p>
             </div>
           )}
