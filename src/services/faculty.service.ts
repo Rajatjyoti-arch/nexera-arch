@@ -124,7 +124,6 @@ export const facultyService = {
     const { data, error } = await supabase
       .from('student_profiles')
       .select('*')
-      .eq('status', 'active')
       .order('name');
 
     if (error) throw error;
