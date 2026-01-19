@@ -837,8 +837,11 @@ export type Database = {
           course: string | null
           created_at: string
           email: string
+          github_url: string | null
           id: string
+          linkedin_url: string | null
           name: string
+          portfolio_url: string | null
           semester: string | null
           skills: string[] | null
           status: string | null
@@ -854,8 +857,11 @@ export type Database = {
           course?: string | null
           created_at?: string
           email: string
+          github_url?: string | null
           id?: string
+          linkedin_url?: string | null
           name: string
+          portfolio_url?: string | null
           semester?: string | null
           skills?: string[] | null
           status?: string | null
@@ -871,8 +877,11 @@ export type Database = {
           course?: string | null
           created_at?: string
           email?: string
+          github_url?: string | null
           id?: string
+          linkedin_url?: string | null
           name?: string
+          portfolio_url?: string | null
           semester?: string | null
           skills?: string[] | null
           status?: string | null
@@ -886,6 +895,7 @@ export type Database = {
       user_certificates: {
         Row: {
           created_at: string
+          credential_url: string | null
           id: string
           issue_date: string | null
           issuer: string | null
@@ -894,6 +904,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          credential_url?: string | null
           id?: string
           issue_date?: string | null
           issuer?: string | null
@@ -902,6 +913,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          credential_url?: string | null
           id?: string
           issue_date?: string | null
           issuer?: string | null
