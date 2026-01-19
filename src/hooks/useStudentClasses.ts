@@ -171,6 +171,124 @@ function calculateAttendanceStats(records: { status: string }[]): AttendanceStat
   return stats;
 }
 
+// CCS-II Demo Schedule Data (from R4_TT_B.Tech-M.Tech_EVEN2025-26_Draft.pdf)
+const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
+  {
+    id: 'ccs-demo-1',
+    name: 'Introduction to Data Science',
+    courseName: 'Introduction to Data Science',
+    courseCode: 'BCCS2C01',
+    room: 'Fabricated Building II-CCS',
+    facultyName: 'Dr. Jasvinder Pal Singh',
+    schedules: [
+      { dayOfWeek: 'Monday', startTime: '09:30', endTime: '10:15' },
+      { dayOfWeek: 'Monday', startTime: '11:45', endTime: '12:30' },
+      { dayOfWeek: 'Tuesday', startTime: '09:30', endTime: '10:15' },
+    ],
+    attendancePercentage: 85,
+    attendanceStats: { totalClasses: 20, presentCount: 17, absentCount: 2, lateCount: 1, excusedCount: 0, percentage: 85 },
+    status: 'upcoming',
+  },
+  {
+    id: 'ccs-demo-2',
+    name: 'Probability and Statistics for Computer Engineers',
+    courseName: 'Probability and Statistics',
+    courseCode: 'IMAT2E01',
+    room: 'Fabricated Building II-CCS',
+    facultyName: 'Dr. Arun Bali',
+    schedules: [
+      { dayOfWeek: 'Monday', startTime: '10:15', endTime: '11:00' },
+      { dayOfWeek: 'Tuesday', startTime: '10:15', endTime: '11:00' },
+    ],
+    attendancePercentage: 90,
+    attendanceStats: { totalClasses: 18, presentCount: 16, absentCount: 1, lateCount: 1, excusedCount: 0, percentage: 90 },
+    status: 'upcoming',
+  },
+  {
+    id: 'ccs-demo-3',
+    name: 'Introduction to Cyber Security',
+    courseName: 'Introduction to Cyber Security',
+    courseCode: 'BCCS2C03',
+    room: 'Fabricated Building II-CCS',
+    facultyName: 'Prof. P.S. Maan',
+    schedules: [
+      { dayOfWeek: 'Tuesday', startTime: '11:00', endTime: '11:45' },
+    ],
+    attendancePercentage: 78,
+    attendanceStats: { totalClasses: 14, presentCount: 11, absentCount: 3, lateCount: 0, excusedCount: 0, percentage: 78 },
+    status: 'upcoming',
+  },
+  {
+    id: 'ccs-demo-4',
+    name: 'Introduction to Data Structures',
+    courseName: 'Introduction to Data Structures',
+    courseCode: 'BCCS2C04',
+    room: 'Fabricated Building II-CCS',
+    facultyName: 'Prof. Dinesh Kumar',
+    schedules: [
+      { dayOfWeek: 'Tuesday', startTime: '11:45', endTime: '12:30' },
+    ],
+    attendancePercentage: 88,
+    attendanceStats: { totalClasses: 16, presentCount: 14, absentCount: 2, lateCount: 0, excusedCount: 0, percentage: 88 },
+    status: 'upcoming',
+  },
+  {
+    id: 'ccs-demo-5',
+    name: 'Quantum Physics for Computer Engineers',
+    courseName: 'Quantum Physics for Computer Engineers',
+    courseCode: 'IPHY2E02',
+    room: 'Fabricated Building II-CCS',
+    facultyName: 'Dr. Parveen',
+    schedules: [
+      { dayOfWeek: 'Monday', startTime: '11:00', endTime: '11:45' },
+      { dayOfWeek: 'Tuesday', startTime: '14:00', endTime: '14:45' },
+    ],
+    attendancePercentage: 72,
+    attendanceStats: { totalClasses: 18, presentCount: 13, absentCount: 4, lateCount: 1, excusedCount: 0, percentage: 72 },
+    status: 'upcoming',
+  },
+  {
+    id: 'ccs-demo-6',
+    name: 'Fundamentals of Artificial Intelligence',
+    courseName: 'Fundamentals of Artificial Intelligence',
+    courseCode: 'BCCS2C02',
+    room: 'Fabricated Building II-CCS',
+    facultyName: 'Mr. Zakir Ahmad Sheikh',
+    schedules: [
+      { dayOfWeek: 'Tuesday', startTime: '14:45', endTime: '15:30' },
+    ],
+    attendancePercentage: 95,
+    attendanceStats: { totalClasses: 12, presentCount: 11, absentCount: 0, lateCount: 1, excusedCount: 0, percentage: 95 },
+    status: 'upcoming',
+  },
+  {
+    id: 'ccs-demo-7',
+    name: 'Project',
+    courseName: 'Project',
+    courseCode: 'BCCS2C05',
+    room: 'Fabricated Building II-CCS',
+    facultyName: 'ALL CSE Faculty',
+    schedules: [
+      { dayOfWeek: 'Monday', startTime: '14:00', endTime: '15:30' },
+      { dayOfWeek: 'Tuesday', startTime: '15:30', endTime: '16:15' },
+    ],
+    attendancePercentage: 100,
+    attendanceStats: { totalClasses: 8, presentCount: 8, absentCount: 0, lateCount: 0, excusedCount: 0, percentage: 100 },
+    status: 'upcoming',
+  },
+];
+
+// Helper function to update class statuses based on current time
+function updateClassStatuses(classes: EnrolledClass[]): EnrolledClass[] {
+  return classes.map(cls => {
+    const relevantInfo = getRelevantSchedule(cls.schedules);
+    return {
+      ...cls,
+      status: relevantInfo?.status || 'not-today',
+    };
+  });
+}
+
 // Main hook for student classes
 export function useStudentClasses() {
   const { user } = useAuth();
@@ -218,8 +336,31 @@ export function useStudentClasses() {
         .eq('student_id', user.id);
       
       if (enrollmentsError) throw enrollmentsError;
+      
+      // If no enrollments, use demo CCS-II schedule
       if (!enrollments || enrollments.length === 0) {
-        return { classes: [], currentDay: getCurrentDayOfWeek() };
+        const demoClasses = updateClassStatuses(CCS_II_DEMO_CLASSES);
+        
+        // Sort by day and time
+        demoClasses.sort((a, b) => {
+          const aSchedule = a.schedules[0];
+          const bSchedule = b.schedules[0];
+          
+          if (!aSchedule && !bSchedule) return 0;
+          if (!aSchedule) return 1;
+          if (!bSchedule) return -1;
+          
+          const aDayOrder = DAY_ORDER[aSchedule.dayOfWeek] || 8;
+          const bDayOrder = DAY_ORDER[bSchedule.dayOfWeek] || 8;
+          
+          if (aDayOrder !== bDayOrder) return aDayOrder - bDayOrder;
+          
+          const [aH, aM] = aSchedule.startTime.split(':').map(Number);
+          const [bH, bM] = bSchedule.startTime.split(':').map(Number);
+          return (aH * 60 + aM) - (bH * 60 + bM);
+        });
+        
+        return { classes: demoClasses, currentDay: getCurrentDayOfWeek() };
       }
       
       // Collect unique faculty IDs and class IDs
