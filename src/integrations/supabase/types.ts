@@ -418,7 +418,9 @@ export type Database = {
           email: string
           id: string
           name: string
+          office_hours: string | null
           status: string | null
+          subjects: string[] | null
           updated_at: string
           user_id: string
         }
@@ -430,7 +432,9 @@ export type Database = {
           email: string
           id?: string
           name: string
+          office_hours?: string | null
           status?: string | null
+          subjects?: string[] | null
           updated_at?: string
           user_id: string
         }
@@ -442,7 +446,9 @@ export type Database = {
           email?: string
           id?: string
           name?: string
+          office_hours?: string | null
           status?: string | null
+          subjects?: string[] | null
           updated_at?: string
           user_id?: string
         }
