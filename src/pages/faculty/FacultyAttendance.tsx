@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Select,
   SelectContent,
@@ -25,11 +26,14 @@ import {
   XCircle,
   AlertCircle,
   Save,
-  RefreshCw
+  RefreshCw,
+  ClipboardCheck,
+  History
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFacultyClasses } from "@/hooks/useFacultyDashboard";
 import { useClassStudents, useMarkAttendance, useClassAttendance } from "@/hooks/useFacultyAttendance";
+import { AttendanceHistory } from "@/components/faculty/AttendanceHistory";
 import { toast } from "sonner";
 
 type AttendanceStatus = 'present' | 'absent' | 'late' | 'excused';
@@ -194,10 +198,25 @@ export default function FacultyAttendance() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Mark Attendance</h1>
-            <p className="text-muted-foreground">Record student attendance for your classes</p>
+            <h1 className="text-3xl font-bold">Attendance Management</h1>
+            <p className="text-muted-foreground">Mark attendance and view historical records</p>
           </div>
         </div>
+
+        {/* Tabs */}
+        <Tabs defaultValue="mark" className="space-y-6">
+          <TabsList className="grid w-full max-w-md grid-cols-2">
+            <TabsTrigger value="mark" className="gap-2">
+              <ClipboardCheck className="w-4 h-4" />
+              Mark Attendance
+            </TabsTrigger>
+            <TabsTrigger value="history" className="gap-2">
+              <History className="w-4 h-4" />
+              View History
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="mark" className="space-y-6">
 
         {/* Selection Controls */}
         <Card className="p-6 border-border/50">
@@ -422,6 +441,12 @@ export default function FacultyAttendance() {
             </Card>
           </motion.div>
         )}
+          </TabsContent>
+
+          <TabsContent value="history">
+            <AttendanceHistory />
+          </TabsContent>
+        </Tabs>
       </div>
     </FacultyLayout>
   );
