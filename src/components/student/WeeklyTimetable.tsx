@@ -10,7 +10,8 @@ interface WeeklyTimetableProps {
   currentDay: string;
 }
 
-const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+// Monday to Friday only (Saturday is holiday)
+const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
 const TIME_SLOTS = [
   { start: '09:30', end: '10:15', label: '9:30 AM' },
