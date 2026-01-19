@@ -18,6 +18,7 @@ import StudentProfile from "./pages/student/StudentProfile";
 import FacultyHome from "./pages/faculty/FacultyHome";
 import FacultyChats from "./pages/faculty/FacultyChats";
 import FacultyClasses from "./pages/faculty/FacultyClasses";
+import FacultyAttendance from "./pages/faculty/FacultyAttendance";
 import FacultyNotices from "./pages/faculty/FacultyNotices";
 import FacultyProfile from "./pages/faculty/FacultyProfile";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -102,6 +103,7 @@ const AppRoutes = () => {
 
         {/* Faculty Routes */}
         <Route path="/faculty" element={<ProtectedRoute allowedRole="faculty"><FacultyHome /></ProtectedRoute>} />
+        <Route path="/faculty/attendance" element={<ProtectedRoute allowedRole="faculty"><FacultyAttendance /></ProtectedRoute>} />
         <Route path="/faculty/chats" element={<ProtectedRoute allowedRole="faculty"><FacultyChats /></ProtectedRoute>} />
         <Route path="/faculty/classes" element={<ProtectedRoute allowedRole="faculty"><FacultyClasses /></ProtectedRoute>} />
         <Route path="/faculty/notices" element={<ProtectedRoute allowedRole="faculty"><FacultyNotices /></ProtectedRoute>} />
