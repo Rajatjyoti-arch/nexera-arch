@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Clock, Calendar, User, BookOpen, AlertCircle, Radio, CheckCircle2, ArrowRight } from "lucide-react";
+import { Clock, Calendar, User, BookOpen, AlertCircle, Radio, CheckCircle2, ArrowRight, LayoutGrid, CalendarDays } from "lucide-react";
 import { motion } from "framer-motion";
 import { 
   useStudentClasses, 
@@ -16,6 +16,9 @@ import {
   type ClassFilter,
   type EnrolledClass 
 } from "@/hooks/useStudentClasses";
+import { WeeklyTimetable } from "@/components/student/WeeklyTimetable";
+
+type ViewMode = 'cards' | 'timetable';
 
 const FILTER_OPTIONS: { value: ClassFilter; label: string }[] = [
   { value: 'all', label: 'All Classes' },
@@ -122,6 +125,7 @@ function EmptyState({ filter }: { filter: ClassFilter }) {
 export default function StudentClasses() {
   const navigate = useNavigate();
   const [filter, setFilter] = useState<ClassFilter>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>('cards');
   const { data, isLoading, error } = useStudentClasses();
 
   const classes = data?.classes || [];
@@ -139,32 +143,50 @@ export default function StudentClasses() {
               Manage your academic schedule and track attendance.
             </p>
           </div>
-          <Button 
-            className="bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl transition-all"
-            onClick={() => navigate('/student/classes')}
-          >
-            <Calendar className="w-4 h-4 mr-2" />
-            View Full Schedule
-          </Button>
+          <div className="flex items-center gap-2">
+            {/* View Toggle */}
+            <div className="flex items-center bg-muted rounded-lg p-1">
+              <Button
+                variant={viewMode === 'cards' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('cards')}
+                className="h-8 px-3"
+              >
+                <LayoutGrid className="w-4 h-4 mr-1.5" />
+                Cards
+              </Button>
+              <Button
+                variant={viewMode === 'timetable' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('timetable')}
+                className="h-8 px-3"
+              >
+                <CalendarDays className="w-4 h-4 mr-1.5" />
+                Timetable
+              </Button>
+            </div>
+          </div>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-2">
-          {FILTER_OPTIONS.map((option) => (
-            <Button
-              key={option.value}
-              variant={filter === option.value ? "default" : "outline"}
-              size="sm"
-              onClick={() => setFilter(option.value)}
-              className={filter === option.value ? "shadow-md" : ""}
+        {/* Filters - Only show in cards view */}
+        {viewMode === 'cards' && (
+          <div className="flex flex-wrap gap-2">
+            {FILTER_OPTIONS.map((option) => (
+              <Button
+                key={option.value}
+                variant={filter === option.value ? "default" : "outline"}
+                size="sm"
+                onClick={() => setFilter(option.value)}
+                className={filter === option.value ? "shadow-md" : ""}
             >
-              {option.label}
-              {option.value === 'all' && classes.length > 0 && (
-                <span className="ml-1.5 text-xs opacity-70">({classes.length})</span>
-              )}
-            </Button>
-          ))}
-        </div>
+                {option.label}
+                {option.value === 'all' && classes.length > 0 && (
+                  <span className="ml-1.5 text-xs opacity-70">({classes.length})</span>
+                )}
+              </Button>
+            ))}
+          </div>
+        )}
 
         {/* Error State */}
         {error && (
@@ -185,13 +207,24 @@ export default function StudentClasses() {
           </div>
         )}
 
-        {/* Empty State */}
-        {!isLoading && !error && filteredClasses.length === 0 && (
+        {/* Empty State - Only in cards view */}
+        {viewMode === 'cards' && !isLoading && !error && filteredClasses.length === 0 && (
           <EmptyState filter={filter} />
         )}
 
-        {/* Classes Grid */}
-        {!isLoading && !error && filteredClasses.length > 0 && (
+        {/* Timetable View */}
+        {viewMode === 'timetable' && !isLoading && !error && classes.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <WeeklyTimetable classes={classes} currentDay={currentDay} />
+          </motion.div>
+        )}
+
+        {/* Classes Grid - Cards View */}
+        {viewMode === 'cards' && !isLoading && !error && filteredClasses.length > 0 && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredClasses.map((cls, index) => {
               // Get primary schedule for display
