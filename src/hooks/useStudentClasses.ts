@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEffect, useState } from 'react';
@@ -486,9 +486,37 @@ export function filterClasses(classes: EnrolledClass[], filter: ClassFilter, cur
   }
 }
 
-// Hook to get attendance summary for dashboard
+// Hook to get attendance summary for dashboard with real-time updates
 export function useStudentAttendanceSummary() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+  
+  // Subscribe to real-time attendance updates
+  useEffect(() => {
+    if (!user?.id) return;
+    
+    const channel = supabase
+      .channel('attendance-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'attendance',
+          filter: `student_id=eq.${user.id}`,
+        },
+        () => {
+          // Invalidate and refetch attendance queries when data changes
+          queryClient.invalidateQueries({ queryKey: ['studentAttendanceSummary', user.id] });
+          queryClient.invalidateQueries({ queryKey: ['studentClasses', user.id] });
+        }
+      )
+      .subscribe();
+    
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id, queryClient]);
   
   return useQuery({
     queryKey: ['studentAttendanceSummary', user?.id],
@@ -508,4 +536,51 @@ export function useStudentAttendanceSummary() {
     enabled: !!user?.id,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
+}
+
+// Hook for real-time attendance subscription (can be used in components)
+export function useRealtimeAttendance() {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  
+  useEffect(() => {
+    if (!user?.id) return;
+    
+    const channel = supabase
+      .channel('attendance-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'attendance',
+          filter: `student_id=eq.${user.id}`,
+        },
+        (payload) => {
+          console.log('New attendance record:', payload.new);
+          // Invalidate queries to trigger refetch
+          queryClient.invalidateQueries({ queryKey: ['studentClasses'] });
+          queryClient.invalidateQueries({ queryKey: ['studentAttendanceSummary'] });
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'attendance',
+          filter: `student_id=eq.${user.id}`,
+        },
+        (payload) => {
+          console.log('Attendance updated:', payload.new);
+          queryClient.invalidateQueries({ queryKey: ['studentClasses'] });
+          queryClient.invalidateQueries({ queryKey: ['studentAttendanceSummary'] });
+        }
+      )
+      .subscribe();
+    
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id, queryClient]);
 }
