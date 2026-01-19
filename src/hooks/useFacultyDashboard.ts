@@ -77,6 +77,96 @@ function formatTime(timeStr: string): string {
   return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
 }
 
+// Demo CCS-II classes for faculty (when no real classes assigned)
+const DEMO_FACULTY_CLASSES: FacultyClass[] = [
+  {
+    id: 'demo-class-1',
+    name: 'Introduction to Data Science',
+    room: 'Fabricated Building II-CCS',
+    year: '1st Year',
+    course: { id: 'course-1', name: 'Introduction to Data Science', code: 'BCCS2C01' },
+    schedules: [
+      { id: 's1', day_of_week: 'Monday', start_time: '09:30', end_time: '10:15' },
+      { id: 's2', day_of_week: 'Wednesday', start_time: '09:30', end_time: '10:15' },
+      { id: 's3', day_of_week: 'Friday', start_time: '09:30', end_time: '10:15' },
+    ],
+    studentCount: 45,
+  },
+  {
+    id: 'demo-class-2',
+    name: 'Probability and Statistics',
+    room: 'Fabricated Building II-CCS',
+    year: '1st Year',
+    course: { id: 'course-2', name: 'Probability and Statistics for Computer Engineers', code: 'IMAT2E01' },
+    schedules: [
+      { id: 's4', day_of_week: 'Monday', start_time: '10:15', end_time: '11:00' },
+      { id: 's5', day_of_week: 'Tuesday', start_time: '10:15', end_time: '11:00' },
+      { id: 's6', day_of_week: 'Thursday', start_time: '10:15', end_time: '11:00' },
+    ],
+    studentCount: 42,
+  },
+  {
+    id: 'demo-class-3',
+    name: 'Introduction to Cyber Security',
+    room: 'Fabricated Building II-CCS',
+    year: '1st Year',
+    course: { id: 'course-3', name: 'Introduction to Cyber Security', code: 'BCCS2C03' },
+    schedules: [
+      { id: 's7', day_of_week: 'Tuesday', start_time: '11:00', end_time: '11:45' },
+      { id: 's8', day_of_week: 'Wednesday', start_time: '11:00', end_time: '11:45' },
+    ],
+    studentCount: 38,
+  },
+  {
+    id: 'demo-class-4',
+    name: 'Introduction to Data Structures',
+    room: 'Fabricated Building II-CCS',
+    year: '1st Year',
+    course: { id: 'course-4', name: 'Introduction to Data Structures', code: 'BCCS2C04' },
+    schedules: [
+      { id: 's9', day_of_week: 'Tuesday', start_time: '11:45', end_time: '12:30' },
+      { id: 's10', day_of_week: 'Thursday', start_time: '09:30', end_time: '10:15' },
+    ],
+    studentCount: 40,
+  },
+  {
+    id: 'demo-class-5',
+    name: 'Quantum Physics for Computer Engineers',
+    room: 'Fabricated Building II-CCS',
+    year: '1st Year',
+    course: { id: 'course-5', name: 'Quantum Physics for Computer Engineers', code: 'IPHY2E02' },
+    schedules: [
+      { id: 's11', day_of_week: 'Monday', start_time: '11:00', end_time: '11:45' },
+      { id: 's12', day_of_week: 'Thursday', start_time: '11:00', end_time: '11:45' },
+    ],
+    studentCount: 44,
+  },
+  {
+    id: 'demo-class-6',
+    name: 'Fundamentals of Artificial Intelligence',
+    room: 'Fabricated Building II-CCS',
+    year: '1st Year',
+    course: { id: 'course-6', name: 'Fundamentals of Artificial Intelligence', code: 'BCCS2C02' },
+    schedules: [
+      { id: 's13', day_of_week: 'Tuesday', start_time: '14:45', end_time: '15:30' },
+      { id: 's14', day_of_week: 'Friday', start_time: '14:00', end_time: '14:45' },
+    ],
+    studentCount: 41,
+  },
+  {
+    id: 'demo-class-7',
+    name: 'Project',
+    room: 'Fabricated Building II-CCS',
+    year: '1st Year',
+    course: { id: 'course-7', name: 'Project', code: 'BCCS2C05' },
+    schedules: [
+      { id: 's15', day_of_week: 'Monday', start_time: '14:00', end_time: '15:30' },
+      { id: 's16', day_of_week: 'Friday', start_time: '14:45', end_time: '16:15' },
+    ],
+    studentCount: 35,
+  },
+];
+
 export function useFacultyClasses() {
   const { user } = useAuth();
 
@@ -116,7 +206,10 @@ export function useFacultyClasses() {
       const junctionIds = (junctionClasses || []).map(c => c.class_id);
       const allClassIds = [...new Set([...directIds, ...junctionIds])];
 
-      if (allClassIds.length === 0) return [];
+      // If no real classes, return demo classes
+      if (allClassIds.length === 0) {
+        return DEMO_FACULTY_CLASSES;
+      }
 
       // Get full class details including schedules
       const { data: classesData, error: classesError } = await supabase
