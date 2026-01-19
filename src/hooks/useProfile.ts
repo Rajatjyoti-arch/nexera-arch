@@ -513,10 +513,11 @@ export function useUpdateFacultyProfile() {
         department: data.department || undefined,
         designation: data.designation || undefined,
       });
-      toast.success('Profile updated successfully');
+      // Toast is handled by the component to avoid double toasts
     },
     onError: (error: Error) => {
-      toast.error(`Failed to update profile: ${error.message}`);
+      // Toast is handled by the component
+      console.error('Failed to update profile:', error.message);
     },
   });
 }
