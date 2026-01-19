@@ -172,6 +172,7 @@ function calculateAttendanceStats(records: { status: string }[]): AttendanceStat
 }
 
 // CCS-II Demo Schedule Data (from R4_TT_B.Tech-M.Tech_EVEN2025-26_Draft.pdf)
+// Full week schedule: Monday to Friday (Saturday is holiday)
 const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
   {
     id: 'ccs-demo-1',
@@ -184,6 +185,9 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
       { dayOfWeek: 'Monday', startTime: '09:30', endTime: '10:15' },
       { dayOfWeek: 'Monday', startTime: '11:45', endTime: '12:30' },
       { dayOfWeek: 'Tuesday', startTime: '09:30', endTime: '10:15' },
+      { dayOfWeek: 'Wednesday', startTime: '09:30', endTime: '10:15' },
+      { dayOfWeek: 'Thursday', startTime: '11:45', endTime: '12:30' },
+      { dayOfWeek: 'Friday', startTime: '09:30', endTime: '10:15' },
     ],
     attendancePercentage: null,
     attendanceStats: null,
@@ -199,6 +203,9 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
     schedules: [
       { dayOfWeek: 'Monday', startTime: '10:15', endTime: '11:00' },
       { dayOfWeek: 'Tuesday', startTime: '10:15', endTime: '11:00' },
+      { dayOfWeek: 'Wednesday', startTime: '10:15', endTime: '11:00' },
+      { dayOfWeek: 'Thursday', startTime: '10:15', endTime: '11:00' },
+      { dayOfWeek: 'Friday', startTime: '10:15', endTime: '11:00' },
     ],
     attendancePercentage: null,
     attendanceStats: null,
@@ -213,6 +220,8 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
     facultyName: 'Prof. P.S. Maan',
     schedules: [
       { dayOfWeek: 'Tuesday', startTime: '11:00', endTime: '11:45' },
+      { dayOfWeek: 'Wednesday', startTime: '11:00', endTime: '11:45' },
+      { dayOfWeek: 'Friday', startTime: '11:00', endTime: '11:45' },
     ],
     attendancePercentage: null,
     attendanceStats: null,
@@ -227,6 +236,9 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
     facultyName: 'Prof. Dinesh Kumar',
     schedules: [
       { dayOfWeek: 'Tuesday', startTime: '11:45', endTime: '12:30' },
+      { dayOfWeek: 'Wednesday', startTime: '11:45', endTime: '12:30' },
+      { dayOfWeek: 'Thursday', startTime: '09:30', endTime: '10:15' },
+      { dayOfWeek: 'Friday', startTime: '11:45', endTime: '12:30' },
     ],
     attendancePercentage: null,
     attendanceStats: null,
@@ -242,6 +254,8 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
     schedules: [
       { dayOfWeek: 'Monday', startTime: '11:00', endTime: '11:45' },
       { dayOfWeek: 'Tuesday', startTime: '14:00', endTime: '14:45' },
+      { dayOfWeek: 'Wednesday', startTime: '14:00', endTime: '14:45' },
+      { dayOfWeek: 'Thursday', startTime: '11:00', endTime: '11:45' },
     ],
     attendancePercentage: null,
     attendanceStats: null,
@@ -256,6 +270,9 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
     facultyName: 'Mr. Zakir Ahmad Sheikh',
     schedules: [
       { dayOfWeek: 'Tuesday', startTime: '14:45', endTime: '15:30' },
+      { dayOfWeek: 'Wednesday', startTime: '14:45', endTime: '15:30' },
+      { dayOfWeek: 'Thursday', startTime: '14:00', endTime: '14:45' },
+      { dayOfWeek: 'Friday', startTime: '14:00', endTime: '14:45' },
     ],
     attendancePercentage: null,
     attendanceStats: null,
@@ -271,6 +288,8 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
     schedules: [
       { dayOfWeek: 'Monday', startTime: '14:00', endTime: '15:30' },
       { dayOfWeek: 'Tuesday', startTime: '15:30', endTime: '16:15' },
+      { dayOfWeek: 'Thursday', startTime: '14:45', endTime: '16:15' },
+      { dayOfWeek: 'Friday', startTime: '14:45', endTime: '16:15' },
     ],
     attendancePercentage: null,
     attendanceStats: null,
