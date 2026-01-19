@@ -185,8 +185,8 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
       { dayOfWeek: 'Monday', startTime: '11:45', endTime: '12:30' },
       { dayOfWeek: 'Tuesday', startTime: '09:30', endTime: '10:15' },
     ],
-    attendancePercentage: 85,
-    attendanceStats: { totalClasses: 20, presentCount: 17, absentCount: 2, lateCount: 1, excusedCount: 0, percentage: 85 },
+    attendancePercentage: null,
+    attendanceStats: null,
     status: 'upcoming',
   },
   {
@@ -200,8 +200,8 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
       { dayOfWeek: 'Monday', startTime: '10:15', endTime: '11:00' },
       { dayOfWeek: 'Tuesday', startTime: '10:15', endTime: '11:00' },
     ],
-    attendancePercentage: 90,
-    attendanceStats: { totalClasses: 18, presentCount: 16, absentCount: 1, lateCount: 1, excusedCount: 0, percentage: 90 },
+    attendancePercentage: null,
+    attendanceStats: null,
     status: 'upcoming',
   },
   {
@@ -214,8 +214,8 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
     schedules: [
       { dayOfWeek: 'Tuesday', startTime: '11:00', endTime: '11:45' },
     ],
-    attendancePercentage: 78,
-    attendanceStats: { totalClasses: 14, presentCount: 11, absentCount: 3, lateCount: 0, excusedCount: 0, percentage: 78 },
+    attendancePercentage: null,
+    attendanceStats: null,
     status: 'upcoming',
   },
   {
@@ -228,8 +228,8 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
     schedules: [
       { dayOfWeek: 'Tuesday', startTime: '11:45', endTime: '12:30' },
     ],
-    attendancePercentage: 88,
-    attendanceStats: { totalClasses: 16, presentCount: 14, absentCount: 2, lateCount: 0, excusedCount: 0, percentage: 88 },
+    attendancePercentage: null,
+    attendanceStats: null,
     status: 'upcoming',
   },
   {
@@ -243,8 +243,8 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
       { dayOfWeek: 'Monday', startTime: '11:00', endTime: '11:45' },
       { dayOfWeek: 'Tuesday', startTime: '14:00', endTime: '14:45' },
     ],
-    attendancePercentage: 72,
-    attendanceStats: { totalClasses: 18, presentCount: 13, absentCount: 4, lateCount: 1, excusedCount: 0, percentage: 72 },
+    attendancePercentage: null,
+    attendanceStats: null,
     status: 'upcoming',
   },
   {
@@ -257,8 +257,8 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
     schedules: [
       { dayOfWeek: 'Tuesday', startTime: '14:45', endTime: '15:30' },
     ],
-    attendancePercentage: 95,
-    attendanceStats: { totalClasses: 12, presentCount: 11, absentCount: 0, lateCount: 1, excusedCount: 0, percentage: 95 },
+    attendancePercentage: null,
+    attendanceStats: null,
     status: 'upcoming',
   },
   {
@@ -272,8 +272,8 @@ const CCS_II_DEMO_CLASSES: EnrolledClass[] = [
       { dayOfWeek: 'Monday', startTime: '14:00', endTime: '15:30' },
       { dayOfWeek: 'Tuesday', startTime: '15:30', endTime: '16:15' },
     ],
-    attendancePercentage: 100,
-    attendanceStats: { totalClasses: 8, presentCount: 8, absentCount: 0, lateCount: 0, excusedCount: 0, percentage: 100 },
+    attendancePercentage: null,
+    attendanceStats: null,
     status: 'upcoming',
   },
 ];
