@@ -9,6 +9,7 @@ import {
     Megaphone,
     AlertTriangle,
     Bell,
+    ClipboardCheck,
     LucideIcon
 } from "lucide-react";
 
@@ -30,9 +31,10 @@ export const studentNavItems: NavItem[] = [
 
 export const facultyNavItems: NavItem[] = [
     { path: "/faculty", icon: Home, label: "Home", colorClass: "nav-blue" },
-    { path: "/faculty/chats", icon: MessageCircle, label: "Chats", colorClass: "nav-indigo" },
+    { path: "/faculty/attendance", icon: ClipboardCheck, label: "Attendance", colorClass: "nav-emerald" },
     { path: "/faculty/classes", icon: GraduationCap, label: "Classes", colorClass: "nav-cyan" },
-    { path: "/faculty/notices", icon: Bell, label: "Notices", colorClass: "nav-emerald" },
+    { path: "/faculty/chats", icon: MessageCircle, label: "Chats", colorClass: "nav-indigo" },
+    { path: "/faculty/notices", icon: Bell, label: "Notices", colorClass: "nav-amber" },
     { path: "/faculty/profile", icon: User, label: "Profile", colorClass: "nav-slate" },
 ];
 
