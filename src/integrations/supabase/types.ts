@@ -51,32 +51,35 @@ export type Database = {
         Row: {
           content: string
           created_at: string
-          created_by: string | null
-          expires_at: string | null
+          created_by: string
           id: string
-          is_active: boolean
+          is_active: boolean | null
+          priority: string | null
+          target_audience: string | null
           title: string
-          type: Database["public"]["Enums"]["announcement_type"]
+          updated_at: string
         }
         Insert: {
           content: string
           created_at?: string
-          created_by?: string | null
-          expires_at?: string | null
+          created_by: string
           id?: string
-          is_active?: boolean
+          is_active?: boolean | null
+          priority?: string | null
+          target_audience?: string | null
           title: string
-          type?: Database["public"]["Enums"]["announcement_type"]
+          updated_at?: string
         }
         Update: {
           content?: string
           created_at?: string
-          created_by?: string | null
-          expires_at?: string | null
+          created_by?: string
           id?: string
-          is_active?: boolean
+          is_active?: boolean | null
+          priority?: string | null
+          target_audience?: string | null
           title?: string
-          type?: Database["public"]["Enums"]["announcement_type"]
+          updated_at?: string
         }
         Relationships: []
       }
@@ -86,33 +89,27 @@ export type Database = {
           created_at: string
           date: string
           id: string
-          marked_by: string
-          notes: string | null
+          marked_by: string | null
           status: string
           student_id: string
-          updated_at: string
         }
         Insert: {
           class_id: string
           created_at?: string
-          date: string
+          date?: string
           id?: string
-          marked_by: string
-          notes?: string | null
-          status: string
+          marked_by?: string | null
+          status?: string
           student_id: string
-          updated_at?: string
         }
         Update: {
           class_id?: string
           created_at?: string
           date?: string
           id?: string
-          marked_by?: string
-          notes?: string | null
+          marked_by?: string | null
           status?: string
           student_id?: string
-          updated_at?: string
         }
         Relationships: [
           {
@@ -126,35 +123,32 @@ export type Database = {
       }
       batches: {
         Row: {
-          course_id: string | null
           created_at: string
+          department_id: string | null
           id: string
           name: string
-          section: string | null
-          year: number
+          year: string | null
         }
         Insert: {
-          course_id?: string | null
           created_at?: string
+          department_id?: string | null
           id?: string
           name: string
-          section?: string | null
-          year: number
+          year?: string | null
         }
         Update: {
-          course_id?: string | null
           created_at?: string
+          department_id?: string | null
           id?: string
           name?: string
-          section?: string | null
-          year?: number
+          year?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "batches_course_id_fkey"
-            columns: ["course_id"]
+            foreignKeyName: "batches_department_id_fkey"
+            columns: ["department_id"]
             isOneToOne: false
-            referencedRelation: "courses"
+            referencedRelation: "departments"
             referencedColumns: ["id"]
           },
         ]
@@ -165,15 +159,15 @@ export type Database = {
           created_at: string
           duration_seconds: number
           id: string
-          pattern: string
+          pattern: string | null
           user_id: string
         }
         Insert: {
           completed_at?: string
           created_at?: string
-          duration_seconds: number
+          duration_seconds?: number
           id?: string
-          pattern?: string
+          pattern?: string | null
           user_id: string
         }
         Update: {
@@ -181,7 +175,7 @@ export type Database = {
           created_at?: string
           duration_seconds?: number
           id?: string
-          pattern?: string
+          pattern?: string | null
           user_id?: string
         }
         Relationships: []
@@ -189,22 +183,22 @@ export type Database = {
       chat_participants: {
         Row: {
           chat_id: string
+          created_at: string
           id: string
-          joined_at: string
           last_read_at: string | null
           user_id: string
         }
         Insert: {
           chat_id: string
+          created_at?: string
           id?: string
-          joined_at?: string
           last_read_at?: string | null
           user_id: string
         }
         Update: {
           chat_id?: string
+          created_at?: string
           id?: string
-          joined_at?: string
           last_read_at?: string | null
           user_id?: string
         }
@@ -224,7 +218,7 @@ export type Database = {
           created_by: string | null
           id: string
           name: string | null
-          type: Database["public"]["Enums"]["chat_type"]
+          type: string
           updated_at: string
         }
         Insert: {
@@ -232,7 +226,7 @@ export type Database = {
           created_by?: string | null
           id?: string
           name?: string | null
-          type?: Database["public"]["Enums"]["chat_type"]
+          type?: string
           updated_at?: string
         }
         Update: {
@@ -240,7 +234,7 @@ export type Database = {
           created_by?: string | null
           id?: string
           name?: string | null
-          type?: Database["public"]["Enums"]["chat_type"]
+          type?: string
           updated_at?: string
         }
         Relationships: []
@@ -248,6 +242,7 @@ export type Database = {
       class_schedules: {
         Row: {
           class_id: string
+          created_at: string
           day_of_week: string
           end_time: string
           id: string
@@ -255,6 +250,7 @@ export type Database = {
         }
         Insert: {
           class_id: string
+          created_at?: string
           day_of_week: string
           end_time: string
           id?: string
@@ -262,6 +258,7 @@ export type Database = {
         }
         Update: {
           class_id?: string
+          created_at?: string
           day_of_week?: string
           end_time?: string
           id?: string
@@ -279,30 +276,33 @@ export type Database = {
       }
       classes: {
         Row: {
-          course_id: string
+          course_id: string | null
           created_at: string
-          faculty_id: string
+          faculty_id: string | null
           id: string
           name: string
           room: string | null
+          updated_at: string
           year: string
         }
         Insert: {
-          course_id: string
+          course_id?: string | null
           created_at?: string
-          faculty_id: string
+          faculty_id?: string | null
           id?: string
           name: string
           room?: string | null
-          year: string
+          updated_at?: string
+          year?: string
         }
         Update: {
-          course_id?: string
+          course_id?: string | null
           created_at?: string
-          faculty_id?: string
+          faculty_id?: string | null
           id?: string
           name?: string
           room?: string | null
+          updated_at?: string
           year?: string
         }
         Relationships: [
@@ -319,7 +319,9 @@ export type Database = {
         Row: {
           code: string
           created_at: string
+          credits: number | null
           department_id: string | null
+          description: string | null
           duration_years: number | null
           id: string
           name: string
@@ -327,7 +329,9 @@ export type Database = {
         Insert: {
           code: string
           created_at?: string
+          credits?: number | null
           department_id?: string | null
+          description?: string | null
           duration_years?: number | null
           id?: string
           name: string
@@ -335,7 +339,9 @@ export type Database = {
         Update: {
           code?: string
           created_at?: string
+          credits?: number | null
           department_id?: string | null
+          description?: string | null
           duration_years?: number | null
           id?: string
           name?: string
@@ -352,21 +358,21 @@ export type Database = {
       }
       departments: {
         Row: {
-          code: string
+          code: string | null
           created_at: string
           description: string | null
           id: string
           name: string
         }
         Insert: {
-          code: string
+          code?: string | null
           created_at?: string
           description?: string | null
           id?: string
           name: string
         }
         Update: {
-          code?: string
+          code?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -377,16 +383,19 @@ export type Database = {
       faculty_classes: {
         Row: {
           class_id: string
+          created_at: string
           faculty_id: string
           id: string
         }
         Insert: {
           class_id: string
+          created_at?: string
           faculty_id: string
           id?: string
         }
         Update: {
           class_id?: string
+          created_at?: string
           faculty_id?: string
           id?: string
         }
@@ -409,9 +418,7 @@ export type Database = {
           email: string
           id: string
           name: string
-          office_hours: string | null
-          status: Database["public"]["Enums"]["user_status"]
-          subjects: string[] | null
+          status: string | null
           updated_at: string
           user_id: string
         }
@@ -423,9 +430,7 @@ export type Database = {
           email: string
           id?: string
           name: string
-          office_hours?: string | null
-          status?: Database["public"]["Enums"]["user_status"]
-          subjects?: string[] | null
+          status?: string | null
           updated_at?: string
           user_id: string
         }
@@ -437,9 +442,7 @@ export type Database = {
           email?: string
           id?: string
           name?: string
-          office_hours?: string | null
-          status?: Database["public"]["Enums"]["user_status"]
-          subjects?: string[] | null
+          status?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -452,7 +455,7 @@ export type Database = {
           created_at: string
           focus_duration_seconds: number
           id: string
-          session_count: number
+          session_count: number | null
           task_label: string | null
           user_id: string
         }
@@ -460,9 +463,9 @@ export type Database = {
           break_duration_seconds?: number | null
           completed_at?: string
           created_at?: string
-          focus_duration_seconds: number
+          focus_duration_seconds?: number
           id?: string
-          session_count?: number
+          session_count?: number | null
           task_label?: string | null
           user_id: string
         }
@@ -472,7 +475,7 @@ export type Database = {
           created_at?: string
           focus_duration_seconds?: number
           id?: string
-          session_count?: number
+          session_count?: number | null
           task_label?: string | null
           user_id?: string
         }
@@ -485,16 +488,16 @@ export type Database = {
           duration_seconds: number
           id: string
           notes: string | null
-          session_type: string
+          session_type: string | null
           user_id: string
         }
         Insert: {
           completed_at?: string
           created_at?: string
-          duration_seconds: number
+          duration_seconds?: number
           id?: string
           notes?: string | null
-          session_type?: string
+          session_type?: string | null
           user_id: string
         }
         Update: {
@@ -503,7 +506,7 @@ export type Database = {
           duration_seconds?: number
           id?: string
           notes?: string | null
-          session_type?: string
+          session_type?: string | null
           user_id?: string
         }
         Relationships: []
@@ -515,7 +518,6 @@ export type Database = {
           created_at: string
           id: string
           sender_id: string | null
-          updated_at: string
         }
         Insert: {
           chat_id: string
@@ -523,7 +525,6 @@ export type Database = {
           created_at?: string
           id?: string
           sender_id?: string | null
-          updated_at?: string
         }
         Update: {
           chat_id?: string
@@ -531,7 +532,6 @@ export type Database = {
           created_at?: string
           id?: string
           sender_id?: string | null
-          updated_at?: string
         }
         Relationships: [
           {
@@ -580,8 +580,9 @@ export type Database = {
           created_by: string
           department_id: string | null
           id: string
-          is_active: boolean
+          is_active: boolean | null
           title: string
+          updated_at: string
         }
         Insert: {
           batch_id?: string | null
@@ -590,8 +591,9 @@ export type Database = {
           created_by: string
           department_id?: string | null
           id?: string
-          is_active?: boolean
+          is_active?: boolean | null
           title: string
+          updated_at?: string
         }
         Update: {
           batch_id?: string | null
@@ -600,8 +602,9 @@ export type Database = {
           created_by?: string
           department_id?: string | null
           id?: string
-          is_active?: boolean
+          is_active?: boolean | null
           title?: string
+          updated_at?: string
         }
         Relationships: [
           {
@@ -626,7 +629,6 @@ export type Database = {
           created_at: string
           id: string
           post_id: string
-          updated_at: string
           user_id: string
         }
         Insert: {
@@ -634,7 +636,6 @@ export type Database = {
           created_at?: string
           id?: string
           post_id: string
-          updated_at?: string
           user_id: string
         }
         Update: {
@@ -642,7 +643,6 @@ export type Database = {
           created_at?: string
           id?: string
           post_id?: string
-          updated_at?: string
           user_id?: string
         }
         Relationships: [
@@ -691,8 +691,7 @@ export type Database = {
           created_at: string
           id: string
           project_id: string | null
-          type: string
-          updated_at: string
+          type: string | null
           user_id: string
         }
         Insert: {
@@ -701,8 +700,7 @@ export type Database = {
           created_at?: string
           id?: string
           project_id?: string | null
-          type?: string
-          updated_at?: string
+          type?: string | null
           user_id: string
         }
         Update: {
@@ -711,73 +709,58 @@ export type Database = {
           created_at?: string
           id?: string
           project_id?: string | null
-          type?: string
-          updated_at?: string
+          type?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "posts_certificate_id_fkey"
-            columns: ["certificate_id"]
-            isOneToOne: false
-            referencedRelation: "user_certificates"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "posts_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "user_projects"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       reports: {
         Row: {
           admin_notes: string | null
+          assigned_to: string | null
           created_at: string
+          description: string | null
           id: string
-          message_id: string | null
-          reason: string
-          reported_user_id: string | null
-          reporter_id: string | null
+          priority: string | null
           resolved_at: string | null
           resolved_by: string | null
-          status: Database["public"]["Enums"]["report_status"]
+          status: string | null
+          submitted_by: string
+          title: string
+          type: string | null
+          updated_at: string
         }
         Insert: {
           admin_notes?: string | null
+          assigned_to?: string | null
           created_at?: string
+          description?: string | null
           id?: string
-          message_id?: string | null
-          reason: string
-          reported_user_id?: string | null
-          reporter_id?: string | null
+          priority?: string | null
           resolved_at?: string | null
           resolved_by?: string | null
-          status?: Database["public"]["Enums"]["report_status"]
+          status?: string | null
+          submitted_by: string
+          title: string
+          type?: string | null
+          updated_at?: string
         }
         Update: {
           admin_notes?: string | null
+          assigned_to?: string | null
           created_at?: string
+          description?: string | null
           id?: string
-          message_id?: string | null
-          reason?: string
-          reported_user_id?: string | null
-          reporter_id?: string | null
+          priority?: string | null
           resolved_at?: string | null
           resolved_by?: string | null
-          status?: Database["public"]["Enums"]["report_status"]
+          status?: string | null
+          submitted_by?: string
+          title?: string
+          type?: string | null
+          updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "reports_message_id_fkey"
-            columns: ["message_id"]
-            isOneToOne: false
-            referencedRelation: "messages"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       saved_posts: {
         Row: {
@@ -813,18 +796,21 @@ export type Database = {
           class_id: string
           enrolled_at: string
           id: string
+          status: string | null
           student_id: string
         }
         Insert: {
           class_id: string
           enrolled_at?: string
           id?: string
+          status?: string | null
           student_id: string
         }
         Update: {
           class_id?: string
           enrolled_at?: string
           id?: string
+          status?: string | null
           student_id?: string
         }
         Relationships: [
@@ -845,17 +831,14 @@ export type Database = {
           course: string | null
           created_at: string
           email: string
-          github_url: string | null
           id: string
-          linkedin_url: string | null
           name: string
-          portfolio_url: string | null
           semester: string | null
           skills: string[] | null
-          status: Database["public"]["Enums"]["user_status"]
+          status: string | null
           updated_at: string
           user_id: string
-          username: string
+          username: string | null
           year: string | null
         }
         Insert: {
@@ -865,17 +848,14 @@ export type Database = {
           course?: string | null
           created_at?: string
           email: string
-          github_url?: string | null
           id?: string
-          linkedin_url?: string | null
           name: string
-          portfolio_url?: string | null
           semester?: string | null
           skills?: string[] | null
-          status?: Database["public"]["Enums"]["user_status"]
+          status?: string | null
           updated_at?: string
           user_id: string
-          username: string
+          username?: string | null
           year?: string | null
         }
         Update: {
@@ -885,17 +865,14 @@ export type Database = {
           course?: string | null
           created_at?: string
           email?: string
-          github_url?: string | null
           id?: string
-          linkedin_url?: string | null
           name?: string
-          portfolio_url?: string | null
           semester?: string | null
           skills?: string[] | null
-          status?: Database["public"]["Enums"]["user_status"]
+          status?: string | null
           updated_at?: string
           user_id?: string
-          username?: string
+          username?: string | null
           year?: string | null
         }
         Relationships: []
@@ -903,7 +880,6 @@ export type Database = {
       user_certificates: {
         Row: {
           created_at: string
-          credential_url: string | null
           id: string
           issue_date: string | null
           issuer: string | null
@@ -912,7 +888,6 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          credential_url?: string | null
           id?: string
           issue_date?: string | null
           issuer?: string | null
@@ -921,7 +896,6 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          credential_url?: string | null
           id?: string
           issue_date?: string | null
           issuer?: string | null
@@ -929,72 +903,6 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
-      }
-      user_profiles: {
-        Row: {
-          avatar_url: string | null
-          bio: string | null
-          course_id: string | null
-          created_at: string
-          department_id: string | null
-          full_name: string
-          github_url: string | null
-          id: string
-          linkedin_url: string | null
-          portfolio_url: string | null
-          semester: string | null
-          university: string | null
-          updated_at: string
-          username: string
-        }
-        Insert: {
-          avatar_url?: string | null
-          bio?: string | null
-          course_id?: string | null
-          created_at?: string
-          department_id?: string | null
-          full_name: string
-          github_url?: string | null
-          id: string
-          linkedin_url?: string | null
-          portfolio_url?: string | null
-          semester?: string | null
-          university?: string | null
-          updated_at?: string
-          username: string
-        }
-        Update: {
-          avatar_url?: string | null
-          bio?: string | null
-          course_id?: string | null
-          created_at?: string
-          department_id?: string | null
-          full_name?: string
-          github_url?: string | null
-          id?: string
-          linkedin_url?: string | null
-          portfolio_url?: string | null
-          semester?: string | null
-          university?: string | null
-          updated_at?: string
-          username?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_profiles_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "courses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_profiles_department_id_fkey"
-            columns: ["department_id"]
-            isOneToOne: false
-            referencedRelation: "departments"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       user_projects: {
         Row: {
@@ -1051,36 +959,36 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          language: string
-          notifications_messages: boolean
-          notifications_notices: boolean
-          notifications_reminders: boolean
-          sound_effects: boolean
-          theme: string
+          language: string | null
+          notifications_messages: boolean | null
+          notifications_notices: boolean | null
+          notifications_reminders: boolean | null
+          sound_effects: boolean | null
+          theme: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
-          language?: string
-          notifications_messages?: boolean
-          notifications_notices?: boolean
-          notifications_reminders?: boolean
-          sound_effects?: boolean
-          theme?: string
+          language?: string | null
+          notifications_messages?: boolean | null
+          notifications_notices?: boolean | null
+          notifications_reminders?: boolean | null
+          sound_effects?: boolean | null
+          theme?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
           id?: string
-          language?: string
-          notifications_messages?: boolean
-          notifications_notices?: boolean
-          notifications_reminders?: boolean
-          sound_effects?: boolean
-          theme?: string
+          language?: string | null
+          notifications_messages?: boolean | null
+          notifications_notices?: boolean | null
+          notifications_reminders?: boolean | null
+          sound_effects?: boolean | null
+          theme?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -1110,26 +1018,65 @@ export type Database = {
       wellness_logs: {
         Row: {
           created_at: string
+          energy_level: number | null
           id: string
+          logged_at: string
           mood: string | null
           notes: string | null
+          sleep_hours: number | null
           stress_level: number | null
           user_id: string
         }
         Insert: {
           created_at?: string
+          energy_level?: number | null
           id?: string
+          logged_at?: string
           mood?: string | null
           notes?: string | null
+          sleep_hours?: number | null
           stress_level?: number | null
           user_id: string
         }
         Update: {
           created_at?: string
+          energy_level?: number | null
           id?: string
+          logged_at?: string
           mood?: string | null
           notes?: string | null
+          sleep_hours?: number | null
           stress_level?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wellness_sessions: {
+        Row: {
+          completed_at: string
+          created_at: string
+          duration_seconds: number
+          focus_duration_seconds: number | null
+          id: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          duration_seconds?: number
+          focus_duration_seconds?: number | null
+          id?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          duration_seconds?: number
+          focus_duration_seconds?: number | null
+          id?: string
+          type?: string
           user_id?: string
         }
         Relationships: []
@@ -1139,11 +1086,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_admin_dashboard_stats: { Args: never; Returns: Json }
-      get_user_role: {
-        Args: { _user_id: string }
-        Returns: Database["public"]["Enums"]["app_role"]
-      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1151,25 +1093,9 @@ export type Database = {
         }
         Returns: boolean
       }
-      is_chat_participant: {
-        Args: { _chat_id: string; _user_id: string }
-        Returns: boolean
-      }
-      is_enrolled_in_class: {
-        Args: { _class_id: string; _user_id: string }
-        Returns: boolean
-      }
-      is_teaching_class: {
-        Args: { _class_id: string; _user_id: string }
-        Returns: boolean
-      }
     }
     Enums: {
-      announcement_type: "normal" | "emergency"
       app_role: "student" | "faculty" | "admin"
-      chat_type: "direct" | "group"
-      report_status: "pending" | "reviewed" | "resolved" | "dismissed"
-      user_status: "pending" | "active" | "suspended"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1297,11 +1223,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      announcement_type: ["normal", "emergency"],
       app_role: ["student", "faculty", "admin"],
-      chat_type: ["direct", "group"],
-      report_status: ["pending", "reviewed", "resolved", "dismissed"],
-      user_status: ["pending", "active", "suspended"],
     },
   },
 } as const

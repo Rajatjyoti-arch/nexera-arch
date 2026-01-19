@@ -3,33 +3,26 @@ import { supabase } from "@/integrations/supabase/client";
 export const adminService = {
   // Dashboard stats
   async getDashboardStats() {
-    const { data, error } = await supabase.rpc('get_admin_dashboard_stats');
-    
-    if (error) {
-      console.error("Error fetching admin stats:", error);
-      // Fallback to manual count
-      const [students, faculty, departments, courses, reports, announcements] = await Promise.all([
-        supabase.from('student_profiles').select('*', { count: 'exact', head: true }),
-        supabase.from('faculty_profiles').select('*', { count: 'exact', head: true }),
-        supabase.from('departments').select('*', { count: 'exact', head: true }),
-        supabase.from('courses').select('*', { count: 'exact', head: true }),
-        supabase.from('reports').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('announcements').select('*', { count: 'exact', head: true }).eq('is_active', true),
-      ]);
+    // Manual count since RPC function may not exist
+    const [students, faculty, departments, courses, reports, announcements] = await Promise.all([
+      supabase.from('student_profiles').select('*', { count: 'exact', head: true }),
+      supabase.from('faculty_profiles').select('*', { count: 'exact', head: true }),
+      supabase.from('departments').select('*', { count: 'exact', head: true }),
+      supabase.from('courses').select('*', { count: 'exact', head: true }),
+      supabase.from('reports').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+      supabase.from('announcements').select('*', { count: 'exact', head: true }).eq('is_active', true),
+    ]);
 
-      return {
-        total_students: students.count || 0,
-        active_students: students.count || 0,
-        pending_students: 0,
-        total_faculty: faculty.count || 0,
-        total_departments: departments.count || 0,
-        total_courses: courses.count || 0,
-        pending_reports: reports.count || 0,
-        active_announcements: announcements.count || 0,
-      };
-    }
-    
-    return data;
+    return {
+      total_students: students.count || 0,
+      active_students: students.count || 0,
+      pending_students: 0,
+      total_faculty: faculty.count || 0,
+      total_departments: departments.count || 0,
+      total_courses: courses.count || 0,
+      pending_reports: reports.count || 0,
+      active_announcements: announcements.count || 0,
+    };
   },
 
   // User management
@@ -206,7 +199,10 @@ export const adminService = {
   async createBatch(data: { name: string; year: number; section?: string; course_id?: string }) {
     const { data: batch, error } = await supabase
       .from('batches')
-      .insert(data)
+      .insert({ 
+        name: data.name, 
+        year: String(data.year),
+      })
       .select()
       .single();
 
