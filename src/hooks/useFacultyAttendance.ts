@@ -17,40 +17,31 @@ export function useClassStudents(classId: string) {
         .eq('status', 'active');
       
       if (error) throw error;
-      if (!enrollments || enrollments.length === 0) {
-        // If no enrollments, return demo students for testing
-        return getDemoStudents();
+      
+      // If enrollments exist, get those students
+      if (enrollments && enrollments.length > 0) {
+        const studentIds = enrollments.map(e => e.student_id);
+        const { data: students, error: profilesError } = await supabase
+          .from('student_profiles')
+          .select('user_id, name, email, avatar_url')
+          .in('user_id', studentIds)
+          .order('name');
+        
+        if (profilesError) throw profilesError;
+        return students || [];
       }
       
-      // Get student profiles
-      const studentIds = enrollments.map(e => e.student_id);
-      const { data: students, error: profilesError } = await supabase
+      // If no enrollments, fetch ALL registered students from student_profiles
+      const { data: allStudents, error: allStudentsError } = await supabase
         .from('student_profiles')
         .select('user_id, name, email, avatar_url')
-        .in('user_id', studentIds)
         .order('name');
       
-      if (profilesError) throw profilesError;
-      return students || [];
+      if (allStudentsError) throw allStudentsError;
+      return allStudents || [];
     },
     enabled: !!classId,
   });
-}
-
-// Demo students for testing when no real enrollments exist
-function getDemoStudents() {
-  return [
-    { user_id: 'demo-student-1', name: 'Aarav Sharma', email: 'aarav.sharma@cujammu.ac.in', avatar_url: null },
-    { user_id: 'demo-student-2', name: 'Priya Patel', email: 'priya.patel@cujammu.ac.in', avatar_url: null },
-    { user_id: 'demo-student-3', name: 'Rahul Verma', email: 'rahul.verma@cujammu.ac.in', avatar_url: null },
-    { user_id: 'demo-student-4', name: 'Ananya Singh', email: 'ananya.singh@cujammu.ac.in', avatar_url: null },
-    { user_id: 'demo-student-5', name: 'Vikram Gupta', email: 'vikram.gupta@cujammu.ac.in', avatar_url: null },
-    { user_id: 'demo-student-6', name: 'Neha Kapoor', email: 'neha.kapoor@cujammu.ac.in', avatar_url: null },
-    { user_id: 'demo-student-7', name: 'Arjun Mehta', email: 'arjun.mehta@cujammu.ac.in', avatar_url: null },
-    { user_id: 'demo-student-8', name: 'Kavya Reddy', email: 'kavya.reddy@cujammu.ac.in', avatar_url: null },
-    { user_id: 'demo-student-9', name: 'Rohit Kumar', email: 'rohit.kumar@cujammu.ac.in', avatar_url: null },
-    { user_id: 'demo-student-10', name: 'Simran Kaur', email: 'simran.kaur@cujammu.ac.in', avatar_url: null },
-  ];
 }
 
 // Get existing attendance for a class on a specific date
