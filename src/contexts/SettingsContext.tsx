@@ -14,7 +14,7 @@ export interface UserSettings {
 }
 
 const DEFAULT_SETTINGS: UserSettings = {
-  theme: 'system',
+  theme: 'dark',
   notifications_notices: true,
   notifications_messages: true,
   notifications_reminders: true,
