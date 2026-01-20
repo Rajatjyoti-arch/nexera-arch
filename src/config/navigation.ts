@@ -11,7 +11,8 @@ import {
     Bell,
     ClipboardCheck,
     Wallet,
-    LucideIcon
+    LucideIcon,
+    Shield
 } from "lucide-react";
 
 export interface NavItem {
@@ -43,7 +44,15 @@ export const facultyNavItems: NavItem[] = [
 export const adminNavItems: NavItem[] = [
     { path: "/admin", icon: LayoutDashboard, label: "Dashboard", colorClass: "nav-rose" },
     { path: "/admin/users", icon: Users, label: "Users", colorClass: "nav-violet" },
+    { path: "/admin/counselors", icon: Heart, label: "Counselors", colorClass: "nav-pink" },
     { path: "/admin/academics", icon: GraduationCap, label: "Academics Setup", colorClass: "nav-amber" },
     { path: "/admin/announcements", icon: Megaphone, label: "Announcements", colorClass: "nav-orange" },
     { path: "/admin/reports", icon: AlertTriangle, label: "Reports", colorClass: "nav-red" },
+];
+
+export const counselorNavItems: NavItem[] = [
+    { path: "/counselor", icon: Home, label: "Dashboard", colorClass: "nav-rose" },
+    { path: "/counselor/students", icon: Users, label: "My Students", colorClass: "nav-blue" },
+    { path: "/counselor/chats", icon: MessageCircle, label: "Messages", colorClass: "nav-indigo" },
+    { path: "/counselor/profile", icon: User, label: "Profile", colorClass: "nav-amber" },
 ];

@@ -315,6 +315,110 @@ export type Database = {
           },
         ]
       }
+      counselor_assignments: {
+        Row: {
+          assigned_at: string
+          assigned_by: string
+          assignment_type: string | null
+          counselor_id: string
+          id: string
+          is_active: boolean | null
+          notes: string | null
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by: string
+          assignment_type?: string | null
+          counselor_id: string
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string
+          assignment_type?: string | null
+          counselor_id?: string
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "counselor_assignments_counselor_id_fkey"
+            columns: ["counselor_id"]
+            isOneToOne: false
+            referencedRelation: "counselor_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      counselor_profiles: {
+        Row: {
+          availability_status: string | null
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          department: string | null
+          designation: string | null
+          email: string
+          id: string
+          languages_spoken: string[] | null
+          name: string
+          office_hours: string | null
+          qualifications: string | null
+          specialization: string | null
+          status: string | null
+          updated_at: string
+          user_id: string
+          years_of_experience: number | null
+        }
+        Insert: {
+          availability_status?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          department?: string | null
+          designation?: string | null
+          email: string
+          id?: string
+          languages_spoken?: string[] | null
+          name: string
+          office_hours?: string | null
+          qualifications?: string | null
+          specialization?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+          years_of_experience?: number | null
+        }
+        Update: {
+          availability_status?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          department?: string | null
+          designation?: string | null
+          email?: string
+          id?: string
+          languages_spoken?: string[] | null
+          name?: string
+          office_hours?: string | null
+          qualifications?: string | null
+          specialization?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+          years_of_experience?: number | null
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           code: string
@@ -1213,7 +1317,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "student" | "faculty" | "admin"
+      app_role: "student" | "faculty" | "admin" | "counselor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1341,7 +1445,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["student", "faculty", "admin"],
+      app_role: ["student", "faculty", "admin", "counselor"],
     },
   },
 } as const
