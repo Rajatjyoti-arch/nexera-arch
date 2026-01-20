@@ -43,7 +43,7 @@ export default function HeartRateTrends() {
   const stats = calculateStats(readings);
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 h-full flex flex-col">
       <div className="flex items-center justify-between">
         <h2 className="text-[10px] font-black text-foreground/80 uppercase tracking-[0.2em] flex items-center gap-3">
           <TrendingUp className="w-4 h-4" />
@@ -68,7 +68,7 @@ export default function HeartRateTrends() {
         </div>
       </div>
 
-      <div className="premium-card card-rose p-8 space-y-8">
+      <div className="premium-card card-rose p-6 lg:p-8 space-y-6 flex-1 flex flex-col">
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div className="text-center p-5 rounded-xl bg-foreground/5">
@@ -102,7 +102,7 @@ export default function HeartRateTrends() {
         </div>
 
         {/* Chart */}
-        <div className="h-80 lg:h-96">
+        <div className="flex-1 min-h-[250px]">
           {isLoading ? (
             <div className="h-full flex items-center justify-center">
               <Activity className="w-8 h-8 text-rose-500 animate-pulse" />

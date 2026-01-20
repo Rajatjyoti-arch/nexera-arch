@@ -400,11 +400,14 @@ export default function StudentWellness() {
                 <WellnessProgress />
               </section>
 
-              {/* Heart Rate Monitor Section */}
-              <HeartRateMonitor />
+              {/* Heart Rate Section - Side by side layout */}
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                {/* Heart Rate Monitor Section */}
+                <HeartRateMonitor />
 
-              {/* Heart Rate Trends Chart */}
-              <HeartRateTrends />
+                {/* Heart Rate Trends Chart */}
+                <HeartRateTrends />
+              </div>
 
               {/* Counselor Booking Section */}
               <CounselorBooking />

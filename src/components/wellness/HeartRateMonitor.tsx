@@ -264,17 +264,17 @@ export default function HeartRateMonitor() {
   const zone = result ? getHeartRateZone(result.bpm) : null;
   
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 h-full flex flex-col">
       <h2 className="text-[10px] font-black text-foreground/80 uppercase tracking-[0.2em] flex items-center gap-3">
         <Heart className="w-4 h-4" />
         Heart Rate Monitor
       </h2>
       
-      <div className="premium-card card-rose p-8 space-y-8">
+      <div className="premium-card card-rose p-6 lg:p-8 space-y-6 flex-1 flex flex-col">
         {/* Camera View - Full width, large */}
         <div className={cn(
-          "relative bg-black rounded-2xl overflow-hidden transition-all duration-300",
-          cameraActive ? "aspect-[4/3] min-h-[500px] lg:min-h-[600px]" : "aspect-[4/3] min-h-[350px]"
+          "relative bg-black rounded-2xl overflow-hidden transition-all duration-300 flex-1",
+          cameraActive ? "min-h-[400px]" : "min-h-[300px]"
         )}>
           <video
             ref={videoRef}
