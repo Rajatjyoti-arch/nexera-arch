@@ -19,6 +19,8 @@ import {
   Maximize2,
   Minimize2,
   TrendingUp,
+  MessageCircle,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -54,6 +56,7 @@ export default function StudentWellness() {
   const [isTyping, setIsTyping] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [activeExercise, setActiveExercise] = useState<'breathing' | 'meditation' | 'focus' | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -214,10 +217,26 @@ export default function StudentWellness() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setIsMaximized(false)}
+                  onClick={() => {
+                    setIsMaximized(false);
+                    setIsChatOpen(true);
+                  }}
                   className="h-10 w-10 rounded-xl hover:bg-secondary"
+                  title="Minimize to overlay"
                 >
                   <Minimize2 className="w-5 h-5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setIsMaximized(false);
+                    setIsChatOpen(false);
+                  }}
+                  className="h-10 w-10 rounded-xl hover:bg-secondary"
+                  title="Close chat"
+                >
+                  <X className="w-5 h-5" />
                 </Button>
               </div>
             </div>
@@ -330,9 +349,9 @@ export default function StudentWellness() {
         </div>
 
         <section className="rounded-3xl border border-border bg-secondary/10 p-4 md:p-8">
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
-            {/* Left Column: Tools */}
-            <div className="lg:col-span-5 space-y-12">
+          <div className="grid lg:grid-cols-1 gap-8 lg:gap-12">
+            {/* Main Content */}
+            <div className="space-y-12">
               <section>
                 <h2 className="text-[10px] font-black text-foreground/80 uppercase tracking-[0.2em] mb-8 flex items-center gap-3">
                   <Activity className="w-4 h-4" />
@@ -432,119 +451,148 @@ export default function StudentWellness() {
                 </div>
               </div>
             </div>
-
-            {/* Right Column: AI Chat */}
-            <div className="lg:col-span-7 flex flex-col h-[650px]">
-              <div className="flex-1 overflow-hidden flex flex-col premium-card card-violet">
-                <div className="p-6 border-b border-border flex items-center justify-between bg-secondary/10">
-                  <div className="flex items-center gap-4">
-                    <div className="relative">
-                      <div className="absolute -inset-2 bg-violet-500/30 rounded-full blur-xl animate-pulse" />
-                      <div className="w-12 h-12 rounded-2xl bg-violet-500/20 flex items-center justify-center relative z-10 border border-violet-500/30">
-                        <Sparkles className="w-6 h-6 text-violet-500" />
-                      </div>
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-online rounded-full border-4 border-card z-20 shadow-sm" />
-                    </div>
-                    <div>
-                      <h2 className="text-sm font-bold text-foreground/90">NexEra Mind</h2>
-                      <p className="text-[10px] text-foreground/70 font-black uppercase tracking-widest mt-0.5">Cognitive Wellness Guide</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="px-3 py-1.5 rounded-lg bg-secondary/20 border border-border text-[9px] font-black text-foreground/70 uppercase tracking-widest">
-                      Anonymous Session
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setIsMaximized(true)}
-                      className="h-9 w-9 rounded-xl hover:bg-secondary"
-                      title="Maximize Chat"
-                    >
-                      <Maximize2 className="w-4 h-4 text-foreground/70 hover:text-foreground/80" />
-                    </Button>
-                  </div>
-                </div>
-
-                <ScrollArea className="flex-1 p-8">
-                  <div className="space-y-10 max-w-2xl mx-auto">
-                    <AnimatePresence initial={false}>
-                      {chatMessages.map((msg) => (
-                        <motion.div
-                          key={msg.id}
-                          initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          className={cn(
-                            "flex flex-col",
-                            msg.isUser ? "items-end" : "items-start"
-                          )}
-                        >
-                          <div
-                            className={cn(
-                              "max-w-[85%] text-sm leading-relaxed font-medium px-5 py-3.5",
-                              msg.isUser
-                                ? "chat-bubble-sent"
-                                : "chat-bubble-received"
-                            )}
-                          >
-                            {msg.content}
-                          </div>
-                          <span className="text-[10px] text-foreground/60 mt-2.5 px-1 font-bold tracking-widest">
-                            {msg.timestamp}
-                          </span>
-                        </motion.div>
-                      ))}
-                      {isTyping && (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className="flex gap-2 py-3"
-                        >
-                          <span className="w-1.5 h-1.5 bg-violet-500/50 rounded-full animate-bounce" />
-                          <span className="w-1.5 h-1.5 bg-violet-500/50 rounded-full animate-bounce [animation-delay:0.2s]" />
-                          <span className="w-1.5 h-1.5 bg-violet-500/50 rounded-full animate-bounce [animation-delay:0.4s]" />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                    <div ref={scrollRef} />
-                  </div>
-                </ScrollArea>
-
-                <div className="p-8 border-t border-border bg-secondary/5">
-                  <div className="relative flex flex-col md:flex-row items-end gap-4 max-w-2xl mx-auto w-full">
-                    <div className="flex-1 relative group">
-                      <textarea
-                        placeholder="Share your thoughts..."
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" && !e.shiftKey) {
-                            e.preventDefault();
-                            handleSend();
-                          }
-                        }}
-                        className="w-full bg-secondary/10 border border-border rounded-2xl px-5 py-4 text-sm outline-none focus:border-violet-500/30 focus:ring-4 focus:ring-violet-500/5 transition-all resize-none min-h-[56px] max-h-32 placeholder:text-foreground/70 font-medium"
-                        rows={1}
-                      />
-                    </div>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={handleSend}
-                      className="h-14 w-14 shrink-0 rounded-2xl bg-violet-500 hover:bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-500/20 transition-all group"
-                    >
-                      <Send className="w-5 h-5 text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                    </motion.button>
-                  </div>
-                  <p className="text-[9px] text-center text-foreground/60 mt-6 uppercase tracking-[0.3em] font-black">
-                    Your conversation is private and not stored permanently
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </section>
       </div>
+
+      {/* Floating Chat Button */}
+      <AnimatePresence>
+        {!isChatOpen && !isMaximized && (
+          <motion.button
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsChatOpen(true)}
+            className="fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-violet-500 hover:bg-violet-600 flex items-center justify-center shadow-2xl shadow-violet-500/40 transition-colors"
+          >
+            <MessageCircle className="w-7 h-7 text-black" />
+            <div className="absolute -top-1 -right-1 w-4 h-4 bg-online rounded-full border-2 border-background animate-pulse" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Chat Overlay */}
+      <AnimatePresence>
+        {isChatOpen && !isMaximized && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-6 right-6 z-50 w-[420px] h-[600px] max-w-[calc(100vw-3rem)] max-h-[calc(100vh-6rem)] flex flex-col rounded-3xl overflow-hidden shadow-2xl shadow-black/30 border border-border bg-card"
+          >
+            {/* Chat Header */}
+            <div className="p-5 border-b border-border flex items-center justify-between bg-secondary/10">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="absolute -inset-2 bg-violet-500/30 rounded-full blur-xl animate-pulse" />
+                  <div className="w-10 h-10 rounded-xl bg-violet-500/20 flex items-center justify-center relative z-10 border border-violet-500/30">
+                    <Sparkles className="w-5 h-5 text-violet-500" />
+                  </div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-online rounded-full border-2 border-card z-20" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-bold text-foreground/90">NexEra Mind</h2>
+                  <p className="text-[9px] text-foreground/70 font-black uppercase tracking-widest">Wellness Guide</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsMaximized(true)}
+                  className="h-8 w-8 rounded-lg hover:bg-secondary"
+                  title="Maximize"
+                >
+                  <Maximize2 className="w-4 h-4 text-foreground/70" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsChatOpen(false)}
+                  className="h-8 w-8 rounded-lg hover:bg-secondary"
+                  title="Minimize"
+                >
+                  <Minimize2 className="w-4 h-4 text-foreground/70" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Chat Messages */}
+            <ScrollArea className="flex-1 p-5">
+              <div className="space-y-6">
+                <AnimatePresence initial={false}>
+                  {chatMessages.map((msg) => (
+                    <motion.div
+                      key={msg.id}
+                      initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      className={cn(
+                        "flex flex-col",
+                        msg.isUser ? "items-end" : "items-start"
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "max-w-[85%] text-sm leading-relaxed font-medium px-4 py-3",
+                          msg.isUser
+                            ? "chat-bubble-sent"
+                            : "chat-bubble-received"
+                        )}
+                      >
+                        {msg.content}
+                      </div>
+                      <span className="text-[9px] text-foreground/60 mt-2 px-1 font-bold tracking-widest">
+                        {msg.timestamp}
+                      </span>
+                    </motion.div>
+                  ))}
+                  {isTyping && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="flex gap-2 py-3"
+                    >
+                      <span className="w-1.5 h-1.5 bg-violet-500/50 rounded-full animate-bounce" />
+                      <span className="w-1.5 h-1.5 bg-violet-500/50 rounded-full animate-bounce [animation-delay:0.2s]" />
+                      <span className="w-1.5 h-1.5 bg-violet-500/50 rounded-full animate-bounce [animation-delay:0.4s]" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <div ref={scrollRef} />
+              </div>
+            </ScrollArea>
+
+            {/* Chat Input */}
+            <div className="p-4 border-t border-border bg-secondary/5">
+              <div className="flex items-end gap-3">
+                <textarea
+                  placeholder="Share your thoughts..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSend();
+                    }
+                  }}
+                  className="flex-1 bg-secondary/10 border border-border rounded-xl px-4 py-3 text-sm outline-none focus:border-violet-500/30 focus:ring-2 focus:ring-violet-500/5 transition-all resize-none min-h-[44px] max-h-24 placeholder:text-foreground/50 font-medium"
+                  rows={1}
+                />
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleSend}
+                  className="h-11 w-11 shrink-0 rounded-xl bg-violet-500 hover:bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-500/20 transition-all"
+                >
+                  <Send className="w-4 h-4 text-black" />
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       
       {/* Exercise Modals */}
       <AnimatePresence>
