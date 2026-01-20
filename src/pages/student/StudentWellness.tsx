@@ -330,9 +330,9 @@ export default function StudentWellness() {
         </div>
 
         <section className="rounded-3xl border border-border bg-secondary/10 p-4 md:p-8">
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-16">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
             {/* Left Column: Tools */}
-            <div className="lg:col-span-4 space-y-12">
+            <div className="lg:col-span-5 space-y-12">
               <section>
                 <h2 className="text-[10px] font-black text-foreground/80 uppercase tracking-[0.2em] mb-8 flex items-center gap-3">
                   <Activity className="w-4 h-4" />
@@ -431,7 +431,7 @@ export default function StudentWellness() {
             </div>
 
             {/* Right Column: AI Chat */}
-            <div className="lg:col-span-8 flex flex-col h-[650px]">
+            <div className="lg:col-span-7 flex flex-col h-[650px]">
               <div className="flex-1 overflow-hidden flex flex-col premium-card card-violet">
                 <div className="p-6 border-b border-border flex items-center justify-between bg-secondary/10">
                   <div className="flex items-center gap-4">
