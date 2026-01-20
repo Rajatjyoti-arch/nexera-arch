@@ -48,7 +48,7 @@ export interface StudentProfile {
   linkedin_url: string | null;
   github_url: string | null;
   portfolio_url: string | null;
-  status: 'active' | 'pending' | 'suspended';
+  status: 'active' | 'suspended';
   created_at: string;
   updated_at: string;
 }
@@ -63,7 +63,7 @@ export interface FacultyProfile {
   designation: string | null;
   subjects: string[] | null;
   office_hours: string | null;
-  status: 'active' | 'pending' | 'suspended';
+  status: 'active' | 'suspended';
   created_at: string;
   updated_at: string;
 }

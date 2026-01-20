@@ -24,6 +24,7 @@ export function useAllFacultyAdmin() {
 }
 
 export function useUpdateStudentStatus() {
+  // Note: Status can only be 'active' or 'suspended' now
   const queryClient = useQueryClient();
   
   return useMutation({

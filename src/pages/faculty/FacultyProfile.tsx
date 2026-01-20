@@ -440,8 +440,8 @@ export default function FacultyProfile() {
               <p className="text-sm text-muted-foreground">Account Status</p>
               <p className="font-medium capitalize">{profile?.status || 'Active'}</p>
             </div>
-            <Badge variant={profile?.status === 'active' ? 'default' : 'secondary'}>
-              {profile?.status === 'active' ? '✓ Verified' : profile?.status || 'Pending'}
+            <Badge variant={profile?.status === 'suspended' ? 'destructive' : 'default'}>
+              {profile?.status === 'suspended' ? 'Suspended' : '✓ Active'}
             </Badge>
           </div>
         </Card>
