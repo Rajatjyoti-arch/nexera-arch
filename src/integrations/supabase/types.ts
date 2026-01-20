@@ -315,6 +315,56 @@ export type Database = {
           },
         ]
       }
+      counselor_appointments: {
+        Row: {
+          appointment_date: string
+          counselor_id: string
+          created_at: string
+          end_time: string
+          id: string
+          notes: string | null
+          reason: string | null
+          start_time: string
+          status: string
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          appointment_date: string
+          counselor_id: string
+          created_at?: string
+          end_time: string
+          id?: string
+          notes?: string | null
+          reason?: string | null
+          start_time: string
+          status?: string
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          appointment_date?: string
+          counselor_id?: string
+          created_at?: string
+          end_time?: string
+          id?: string
+          notes?: string | null
+          reason?: string | null
+          start_time?: string
+          status?: string
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "counselor_appointments_counselor_id_fkey"
+            columns: ["counselor_id"]
+            isOneToOne: false
+            referencedRelation: "counselor_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       counselor_assignments: {
         Row: {
           assigned_at: string
