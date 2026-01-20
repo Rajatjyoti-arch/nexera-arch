@@ -26,6 +26,7 @@ import { useChatsWithUnread, useMarkChatAsRead, useRealtimeMessages, useRealtime
 import { useChatMessages, useSendMessage } from "@/hooks/useChat";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatDistanceToNow } from "date-fns";
+import { NewChatDialog } from "@/components/chat/NewChatDialog";
 
 const getTypeColor = (type: string) => {
   switch (type) {
@@ -41,6 +42,7 @@ export default function StudentChats() {
   const [selectedChat, setSelectedChat] = useState<ChatPreview | null>(null);
   const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [newChatOpen, setNewChatOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Fetch chats with unread counts
@@ -102,6 +104,16 @@ export default function StudentChats() {
     chat.participants.some(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  const handleChatCreated = (chatId: string) => {
+    // Refetch chats and select the new one
+    refetchChats().then(() => {
+      const newChat = chats?.find(c => c.id === chatId);
+      if (newChat) {
+        setSelectedChat(newChat);
+      }
+    });
+  };
+
   const formatTime = (dateStr: string | null) => {
     if (!dateStr) return '';
     try {
@@ -139,7 +151,12 @@ export default function StudentChats() {
                     </p>
                   </div>
                 </div>
-                <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-secondary btn-press border border-border">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-10 w-10 rounded-xl hover:bg-secondary btn-press border border-border"
+                  onClick={() => setNewChatOpen(true)}
+                >
                   <Plus className="w-4 h-4" />
                 </Button>
               </div>
@@ -361,7 +378,10 @@ export default function StudentChats() {
                     Choose a chat from the list to start messaging.
                   </p>
                 </div>
-                <Button className="rounded-xl bg-indigo-500 hover:bg-indigo-600 h-12 px-8 text-xs font-bold uppercase tracking-widest btn-press shadow-lg shadow-indigo-500/20 text-black">
+                <Button 
+                  className="rounded-xl bg-indigo-500 hover:bg-indigo-600 h-12 px-8 text-xs font-bold uppercase tracking-widest btn-press shadow-lg shadow-indigo-500/20 text-black"
+                  onClick={() => setNewChatOpen(true)}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   New Message
                 </Button>
@@ -369,6 +389,13 @@ export default function StudentChats() {
             )}
           </motion.div>
         </div>
+
+        {/* New Chat Dialog */}
+        <NewChatDialog 
+          open={newChatOpen} 
+          onOpenChange={setNewChatOpen}
+          onChatCreated={handleChatCreated}
+        />
       </div>
     </StudentLayout>
   );
