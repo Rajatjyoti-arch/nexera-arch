@@ -641,6 +641,39 @@ export type Database = {
         }
         Relationships: []
       }
+      heart_rate_readings: {
+        Row: {
+          bpm: number
+          created_at: string
+          id: string
+          measured_at: string
+          measurement_method: string
+          notes: string | null
+          signal_quality: string | null
+          user_id: string
+        }
+        Insert: {
+          bpm: number
+          created_at?: string
+          id?: string
+          measured_at?: string
+          measurement_method?: string
+          notes?: string | null
+          signal_quality?: string | null
+          user_id: string
+        }
+        Update: {
+          bpm?: number
+          created_at?: string
+          id?: string
+          measured_at?: string
+          measurement_method?: string
+          notes?: string | null
+          signal_quality?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       meditation_sessions: {
         Row: {
           completed_at: string
