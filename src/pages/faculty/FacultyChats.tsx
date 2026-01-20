@@ -9,7 +9,6 @@ import {
   Video,
   MoreVertical,
   Plus,
-  Image as ImageIcon,
   Smile,
   ChevronLeft,
   Sparkles,
@@ -23,7 +22,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useChatsWithUnread, useRealtimeMessages, useRealtimeChatMessages, useMarkChatAsRead, ChatPreview } from "@/hooks/useMessages";
-import { useChatMessages, useSendMessage, useFindOrCreateDirectChat, Message } from "@/hooks/useChat";
+import { useChatMessages, useSendMessage, useFindOrCreateDirectChat } from "@/hooks/useChat";
 import { useFacultyStudents } from "@/hooks/useFaculty";
 import { useQueryClient } from "@tanstack/react-query";
 import { format, isToday, isYesterday, parseISO } from "date-fns";
@@ -35,6 +34,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useChatPresence, useGlobalPresence } from "@/hooks/useChatPresence";
+import { useChatAttachments } from "@/hooks/useChatAttachments";
+import { TypingIndicator } from "@/components/chat/TypingIndicator";
+import { OnlineIndicator } from "@/components/chat/OnlineIndicator";
+import { MessageAttachment } from "@/components/chat/MessageAttachment";
+import { AttachmentButton } from "@/components/chat/AttachmentButton";
 
 export default function FacultyChats() {
   const { user } = useAuth();
@@ -44,6 +49,7 @@ export default function FacultyChats() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isNewChatOpen, setIsNewChatOpen] = useState(false);
   const [studentSearch, setStudentSearch] = useState("");
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Fetch chats with unread counts
@@ -59,6 +65,13 @@ export default function FacultyChats() {
   
   // Fetch students for new chat
   const { data: students = [] } = useFacultyStudents();
+
+  // Presence & typing indicators
+  const { getTypingIndicator, sendTypingStatus, isUserOnline } = useChatPresence(selectedChat?.id || null);
+  const typingIndicator = getTypingIndicator();
+
+  // Attachments
+  const { handleFileSelect, sendMessageWithAttachment, isUploading } = useChatAttachments(selectedChat?.id || null);
 
   // Realtime subscriptions
   const handleGlobalMessageUpdate = useCallback(() => {
@@ -97,17 +110,47 @@ export default function FacultyChats() {
   );
 
   const handleSend = async () => {
-    if (!message.trim() || !selectedChat?.id) return;
+    if ((!message.trim() && !pendingFile) || !selectedChat?.id || isUploading) return;
+
+    const messageText = message.trim();
+    setMessage("");
+    sendTypingStatus(false);
 
     try {
-      await sendMessage.mutateAsync({
-        chatId: selectedChat.id,
-        content: message.trim(),
-      });
-      setMessage("");
+      if (pendingFile) {
+        const attachment = await handleFileSelect(pendingFile);
+        if (attachment) {
+          await sendMessageWithAttachment.mutateAsync({
+            content: messageText || `Sent ${attachment.type === 'image' ? 'an image' : 'a file'}`,
+            attachmentUrl: attachment.url,
+            attachmentType: attachment.type,
+            attachmentName: attachment.name,
+          });
+        }
+        setPendingFile(null);
+      } else {
+        await sendMessage.mutateAsync({
+          chatId: selectedChat.id,
+          content: messageText,
+        });
+      }
     } catch (error) {
+      setMessage(messageText);
       toast.error("Failed to send message");
     }
+  };
+
+  const handleTyping = (value: string) => {
+    setMessage(value);
+    if (value.trim()) {
+      sendTypingStatus(true);
+    } else {
+      sendTypingStatus(false);
+    }
+  };
+
+  const handleFileSelectWrapper = (file: File) => {
+    setPendingFile(file);
   };
 
   const handleStartChat = async (studentUserId: string) => {
@@ -325,6 +368,11 @@ export default function FacultyChats() {
                         )}
                       </AvatarFallback>
                     </Avatar>
+                    {selectedChat.type === 'direct' && selectedChat.participants[0] && (
+                      <div className="absolute -bottom-0.5 -right-0.5 p-0.5 bg-background rounded-full">
+                        <OnlineIndicator isOnline={isUserOnline(selectedChat.participants[0].userId)} size="md" />
+                      </div>
+                    )}
                   </div>
                   <div>
                     <h2 className="font-bold flex items-center gap-2">
@@ -334,9 +382,7 @@ export default function FacultyChats() {
                     <p className="text-xs text-foreground/60">
                       {selectedChat.type === 'group' 
                         ? `${selectedChat.participants.length + 1} members`
-                        : selectedChat.participants.length > 0 
-                          ? selectedChat.participants[0].name
-                          : 'Direct message'}
+                        : isUserOnline(selectedChat.participants[0]?.userId || '') ? 'Online' : 'Direct message'}
                     </p>
                   </div>
                 </div>
@@ -364,6 +410,7 @@ export default function FacultyChats() {
                     <AnimatePresence initial={false}>
                       {messages.map((msg) => {
                         const isMine = msg.sender_id === user?.id;
+                        const hasAttachment = !!(msg as any).attachment_url;
                         return (
                           <motion.div
                             key={msg.id}
@@ -395,6 +442,14 @@ export default function FacultyChats() {
                                   </p>
                                 )}
                                 <p className="text-sm leading-relaxed">{msg.content}</p>
+                                {hasAttachment && (
+                                  <MessageAttachment
+                                    url={(msg as any).attachment_url}
+                                    type={(msg as any).attachment_type}
+                                    name={(msg as any).attachment_name}
+                                    isOwn={isMine}
+                                  />
+                                )}
                                 <p className={cn(
                                   "text-[10px] mt-2 font-medium opacity-70",
                                   isMine ? "text-right" : "text-left"
@@ -407,23 +462,33 @@ export default function FacultyChats() {
                         );
                       })}
                     </AnimatePresence>
+                    {/* Typing indicator */}
+                    <AnimatePresence>
+                      {typingIndicator && (
+                        <TypingIndicator message={typingIndicator} />
+                      )}
+                    </AnimatePresence>
                     <div ref={scrollRef} />
                   </div>
                 )}
               </ScrollArea>
 
               {/* Input Area */}
-              <div className="p-6 border-t border-border bg-secondary/10">
+              <div className="p-6 border-t border-border bg-secondary/10 relative">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" className="rounded-xl hover:bg-secondary text-foreground/60"><Plus className="w-5 h-5" /></Button>
-                    <Button variant="ghost" size="icon" className="rounded-xl hover:bg-secondary text-foreground/60"><ImageIcon className="w-5 h-5" /></Button>
+                  <div className="flex items-center gap-1 relative">
+                    <AttachmentButton
+                      onFileSelect={handleFileSelectWrapper}
+                      isUploading={isUploading}
+                      pendingFile={pendingFile}
+                      onClearPending={() => setPendingFile(null)}
+                    />
                   </div>
                   <div className="flex-1 relative flex items-center">
                     <Input
                       placeholder="Type a message..."
                       value={message}
-                      onChange={(e) => setMessage(e.target.value)}
+                      onChange={(e) => handleTyping(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
                       className="h-14 bg-secondary/20 border-border rounded-2xl px-5 pr-12 focus:border-faculty/50 transition-all"
                     />
@@ -433,11 +498,11 @@ export default function FacultyChats() {
                   </div>
                   <Button
                     onClick={handleSend}
-                    disabled={!message.trim() || sendMessage.isPending}
+                    disabled={(!message.trim() && !pendingFile) || sendMessage.isPending || isUploading}
                     size="icon"
                     className="h-14 w-14 rounded-2xl bg-faculty hover:bg-faculty/90 border-0 shadow-glow group disabled:opacity-50"
                   >
-                    {sendMessage.isPending ? (
+                    {sendMessage.isPending || isUploading ? (
                       <Loader2 className="w-6 h-6 animate-spin text-black" />
                     ) : (
                       <Send className="w-6 h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform text-black" />
