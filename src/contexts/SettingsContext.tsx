@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
+import { User } from '@/contexts/AuthContext';
 
 export type Theme = 'light' | 'dark' | 'system';
 
@@ -45,8 +45,12 @@ function getSystemTheme(): 'light' | 'dark' {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
-export function SettingsProvider({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
+interface SettingsProviderProps {
+  children: ReactNode;
+  user?: User | null;
+}
+
+export function SettingsProvider({ children, user }: SettingsProviderProps) {
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
