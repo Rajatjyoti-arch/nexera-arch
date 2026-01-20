@@ -15,6 +15,7 @@ interface QuickActionsProps {
   onAddMoney: () => void;
   onPay: (category: string) => void;
   onScan: () => void;
+  onSend: () => void;
 }
 
 const mainActions = [
@@ -31,7 +32,7 @@ const quickPayOptions = [
   { icon: BookOpen, label: "Library", category: "library", color: "from-emerald-400 to-teal-500" },
 ];
 
-export function QuickActions({ onAddMoney, onPay, onScan }: QuickActionsProps) {
+export function QuickActions({ onAddMoney, onPay, onScan, onSend }: QuickActionsProps) {
   const handleMainAction = (action: string) => {
     switch (action) {
       case "add":
@@ -39,6 +40,9 @@ export function QuickActions({ onAddMoney, onPay, onScan }: QuickActionsProps) {
         break;
       case "scan":
         onScan();
+        break;
+      case "send":
+        onSend();
         break;
       default:
         break;
