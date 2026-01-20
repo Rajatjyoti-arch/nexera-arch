@@ -28,6 +28,8 @@ import MeditationTimer from "@/components/wellness/MeditationTimer";
 import FocusTimer from "@/components/wellness/FocusTimer";
 import WellnessProgress from "@/components/wellness/WellnessProgress";
 import CounselorBooking from "@/components/wellness/CounselorBooking";
+import HeartRateMonitor from "@/components/wellness/HeartRateMonitor";
+import CounselorList from "@/components/wellness/CounselorList";
 
 
 type Mood = "great" | "okay" | "low" | null;
@@ -397,8 +399,14 @@ export default function StudentWellness() {
                 <WellnessProgress />
               </section>
 
+              {/* Heart Rate Monitor Section */}
+              <HeartRateMonitor />
+
               {/* Counselor Booking Section */}
               <CounselorBooking />
+
+              {/* Browse Available Counselors */}
+              <CounselorList />
 
               <div className="premium-card card-amber p-6">
                 <div className="flex gap-4">

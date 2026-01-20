@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,7 @@ import {
   ArrowRight,
   HeartHandshake
 } from "lucide-react";
+import CounselorAppointmentManager from "@/components/counselor/AppointmentManager";
 
 interface AssignedStudent {
   id: string;
@@ -152,79 +154,92 @@ export default function CounselorHome() {
           ))}
         </div>
 
-        {/* Assigned Students */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <Card className="glass-card">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <UserCheck className="w-5 h-5 text-primary" />
-                Your Assigned Students
-              </CardTitle>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => navigate('/counselor/students')}
-              >
-                View All <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-                </div>
-              ) : assignments.length === 0 ? (
-                <div className="text-center py-8 space-y-2">
-                  <Users className="w-12 h-12 text-muted-foreground mx-auto" />
-                  <p className="text-muted-foreground">No students assigned yet</p>
-                  <p className="text-sm text-muted-foreground">
-                    Students will appear here once assigned by an administrator
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {assignments.slice(0, 5).map((assignment) => (
-                    <motion.div
-                      key={assignment.id}
-                      className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors cursor-pointer"
-                      onClick={() => navigate('/counselor/chats', { state: { studentId: assignment.student_id } })}
-                      whileHover={{ x: 4 }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarImage src={assignment.student_profile?.avatar_url || undefined} />
-                          <AvatarFallback className="bg-primary/10 text-primary">
-                            {assignment.student_profile?.name?.charAt(0) || 'S'}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium">
-                            {assignment.student_profile?.name || 'Unknown Student'}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {assignment.student_profile?.course} • {assignment.student_profile?.year}
-                          </p>
+        {/* Tabs for Students and Appointments */}
+        <Tabs defaultValue="appointments" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="appointments" className="gap-2">
+              <Calendar className="w-4 h-4" />
+              Appointments
+            </TabsTrigger>
+            <TabsTrigger value="students" className="gap-2">
+              <UserCheck className="w-4 h-4" />
+              Students
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="appointments">
+            <CounselorAppointmentManager />
+          </TabsContent>
+
+          <TabsContent value="students">
+            <Card className="glass-card">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <UserCheck className="w-5 h-5 text-primary" />
+                  Your Assigned Students
+                </CardTitle>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => navigate('/counselor/students')}
+                >
+                  View All <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+                  </div>
+                ) : assignments.length === 0 ? (
+                  <div className="text-center py-8 space-y-2">
+                    <Users className="w-12 h-12 text-muted-foreground mx-auto" />
+                    <p className="text-muted-foreground">No students assigned yet</p>
+                    <p className="text-sm text-muted-foreground">
+                      Students will appear here once assigned by an administrator
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {assignments.slice(0, 5).map((assignment) => (
+                      <motion.div
+                        key={assignment.id}
+                        className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors cursor-pointer"
+                        onClick={() => navigate('/counselor/chats', { state: { studentId: assignment.student_id } })}
+                        whileHover={{ x: 4 }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Avatar>
+                            <AvatarImage src={assignment.student_profile?.avatar_url || undefined} />
+                            <AvatarFallback className="bg-primary/10 text-primary">
+                              {assignment.student_profile?.name?.charAt(0) || 'S'}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium">
+                              {assignment.student_profile?.name || 'Unknown Student'}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {assignment.student_profile?.course} • {assignment.student_profile?.year}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="secondary" className="capitalize">
-                          {assignment.assignment_type}
-                        </Badge>
-                        <Button variant="ghost" size="icon">
-                          <MessageCircle className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="secondary" className="capitalize">
+                            {assignment.assignment_type}
+                          </Badge>
+                          <Button variant="ghost" size="icon">
+                            <MessageCircle className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </CounselorLayout>
   );
