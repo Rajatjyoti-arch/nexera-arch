@@ -15,7 +15,8 @@ import {
   Sparkles,
   TrendingUp,
   Loader2,
-  BarChart3
+  BarChart3,
+  Clock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ import { StatsGrid, StatItem } from "@/components/dashboard/StatsGrid";
 import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
 import { SectionContainer } from "@/components/dashboard/SectionContainer";
 import { ClassRoutineDashboard } from "@/components/dashboard/ClassRoutineDashboard";
+import { MiniTimetableWidget } from "@/components/dashboard/MiniTimetableWidget";
 import { useStudentDashboard, formatTimeForDisplay, TodayClass } from "@/hooks/useStudentDashboard";
 import { useStudentClasses } from "@/hooks/useStudentClasses";
 import { useNavigate } from "react-router-dom";
@@ -255,35 +257,68 @@ export default function StudentHome() {
             )}
           </SectionContainer>
 
-          {/* Quick Actions Section */}
-          <SectionContainer className="lg:col-span-4" title="Quick Access" icon={Sparkles}>
-            <div className="grid grid-cols-2 gap-4 h-full">
-              {quickActions.map((action, i) => (
-                <motion.button
-                  key={action.label}
-                  onClick={() => navigate(action.path)}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ delay: 0.4 + i * 0.05 }}
-                  className={cn(
-                    "premium-card p-5 flex flex-col items-center justify-center gap-3 group text-center relative overflow-hidden",
-                    action.colorClass
-                  )}
+          {/* Right Column: Mini Timetable + Quick Actions */}
+          <div className="lg:col-span-4 space-y-8">
+            {/* Mini Timetable Widget */}
+            <SectionContainer 
+              title="Remaining Today" 
+              icon={Clock}
+              action={
+                <button 
+                  onClick={() => navigate('/student/classes')}
+                  className="text-[10px] font-black text-foreground/70 uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-1 group"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  View All <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                </button>
+              }
+            >
+              {classesLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                </div>
+              ) : classesData?.classes ? (
+                <MiniTimetableWidget 
+                  classes={classesData.classes} 
+                  currentDay={classesData.currentDay} 
+                />
+              ) : (
+                <div className="text-center py-8">
+                  <Calendar className="w-10 h-10 mx-auto text-foreground/30 mb-3" />
+                  <p className="text-sm text-foreground/60">No schedule data</p>
+                </div>
+              )}
+            </SectionContainer>
 
-                  <div className="icon-box w-12 h-12 mb-1">
-                    <action.icon className="w-6 h-6" />
-                  </div>
-                  <span className="text-xs font-bold text-foreground/80 group-hover:text-foreground transition-colors">
-                    {action.label}
-                  </span>
-                </motion.button>
-              ))}
-            </div>
-          </SectionContainer>
+            {/* Quick Actions Section */}
+            <SectionContainer title="Quick Access" icon={Sparkles}>
+              <div className="grid grid-cols-2 gap-4">
+                {quickActions.map((action, i) => (
+                  <motion.button
+                    key={action.label}
+                    onClick={() => navigate(action.path)}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ delay: 0.4 + i * 0.05 }}
+                    className={cn(
+                      "premium-card p-5 flex flex-col items-center justify-center gap-3 group text-center relative overflow-hidden",
+                      action.colorClass
+                    )}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                    <div className="icon-box w-12 h-12 mb-1">
+                      <action.icon className="w-6 h-6" />
+                    </div>
+                    <span className="text-xs font-bold text-foreground/80 group-hover:text-foreground transition-colors">
+                      {action.label}
+                    </span>
+                  </motion.button>
+                ))}
+              </div>
+            </SectionContainer>
+          </div>
         </div>
 
         {/* Class Routine Dashboard */}
