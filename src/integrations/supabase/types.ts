@@ -892,6 +892,39 @@ export type Database = {
         }
         Relationships: []
       }
+      student_wallets: {
+        Row: {
+          balance: number
+          created_at: string
+          id: string
+          is_active: boolean
+          pin_hash: string | null
+          updated_at: string
+          upi_id: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          pin_hash?: string | null
+          updated_at?: string
+          upi_id: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          pin_hash?: string | null
+          updated_at?: string
+          upi_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_certificates: {
         Row: {
           created_at: string
@@ -1032,6 +1065,60 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      wallet_transactions: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          description: string
+          id: string
+          recipient_wallet_id: string | null
+          reference_id: string
+          status: string
+          type: string
+          wallet_id: string
+        }
+        Insert: {
+          amount: number
+          category?: string
+          created_at?: string
+          description: string
+          id?: string
+          recipient_wallet_id?: string | null
+          reference_id?: string
+          status?: string
+          type: string
+          wallet_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          recipient_wallet_id?: string | null
+          reference_id?: string
+          status?: string
+          type?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_transactions_recipient_wallet_id_fkey"
+            columns: ["recipient_wallet_id"]
+            isOneToOne: false
+            referencedRelation: "student_wallets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "student_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       wellness_logs: {
         Row: {

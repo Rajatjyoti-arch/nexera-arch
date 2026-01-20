@@ -11,6 +11,7 @@ import FacultyLogin from "./pages/faculty/FacultyLogin";
 import AdminLogin from "./pages/admin/AdminLogin";
 import StudentHome from "./pages/student/StudentHome";
 import StudentClasses from "./pages/student/StudentClasses";
+import StudentWallet from "./pages/student/StudentWallet";
 import StudentChats from "./pages/student/StudentChats";
 import StudentNetwork from "./pages/student/StudentNetwork";
 import StudentWellness from "./pages/student/StudentWellness";
@@ -97,6 +98,7 @@ const AppRoutes = () => {
         <Route path="/student" element={<ProtectedRoute allowedRole="student"><StudentHome /></ProtectedRoute>} />
         <Route path="/student/chats" element={<ProtectedRoute allowedRole="student"><StudentChats /></ProtectedRoute>} />
         <Route path="/student/classes" element={<ProtectedRoute allowedRole="student"><StudentClasses /></ProtectedRoute>} />
+        <Route path="/student/wallet" element={<ProtectedRoute allowedRole="student"><StudentWallet /></ProtectedRoute>} />
         <Route path="/student/network" element={<ProtectedRoute allowedRole="student"><StudentNetwork /></ProtectedRoute>} />
         <Route path="/student/wellness" element={<ProtectedRoute allowedRole="student"><StudentWellness /></ProtectedRoute>} />
         <Route path="/student/profile" element={<ProtectedRoute allowedRole="student"><StudentProfile /></ProtectedRoute>} />

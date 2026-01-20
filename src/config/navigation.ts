@@ -10,6 +10,7 @@ import {
     AlertTriangle,
     Bell,
     ClipboardCheck,
+    Wallet,
     LucideIcon
 } from "lucide-react";
 
@@ -23,6 +24,7 @@ export interface NavItem {
 export const studentNavItems: NavItem[] = [
     { path: "/student", icon: Home, label: "Dashboard", colorClass: "nav-violet" },
     { path: "/student/classes", icon: GraduationCap, label: "Classes", colorClass: "nav-cyan" },
+    { path: "/student/wallet", icon: Wallet, label: "Wallet", colorClass: "nav-emerald" },
     { path: "/student/chats", icon: MessageCircle, label: "Messages", colorClass: "nav-indigo" },
     { path: "/student/network", icon: Users, label: "Network", colorClass: "nav-teal" },
     { path: "/student/wellness", icon: Heart, label: "Wellness", colorClass: "nav-rose" },
