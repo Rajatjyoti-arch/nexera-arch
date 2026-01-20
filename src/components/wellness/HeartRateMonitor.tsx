@@ -288,16 +288,16 @@ export default function HeartRateMonitor() {
           <canvas ref={canvasRef} className="hidden" />
           
           {!cameraActive && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-              <div className="w-20 h-20 rounded-full bg-rose-500/10 flex items-center justify-center">
-                <Camera className="w-10 h-10 text-rose-500" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-black/40 to-black/60">
+              <div className="w-20 h-20 rounded-full bg-rose-500/20 border border-rose-500/30 flex items-center justify-center backdrop-blur-sm">
+                <Camera className="w-10 h-10 text-rose-400" />
               </div>
-              <p className="text-sm text-foreground/70 text-center max-w-xs">
+              <p className="text-sm text-white/80 text-center max-w-xs px-4">
                 Use your webcam to measure heart rate using rPPG technology
               </p>
               <Button
                 onClick={startCamera}
-                className="bg-rose-500 hover:bg-rose-600 text-black font-bold"
+                className="bg-rose-500 hover:bg-rose-600 text-black font-bold shadow-lg shadow-rose-500/25"
               >
                 <Camera className="w-4 h-4 mr-2" />
                 Start Camera
