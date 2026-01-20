@@ -7,7 +7,8 @@ import {
     GraduationCap,
     Building2,
     ShieldCheck,
-    ChevronLeft
+    ChevronLeft,
+    Heart
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -51,7 +52,7 @@ export default function Portals() {
                     </p>
                 </motion.div>
 
-                <div className="grid md:grid-cols-3 gap-8 max-w-6xl w-full">
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl w-full">
                     {[
                         {
                             title: "Student Portal",
@@ -68,6 +69,14 @@ export default function Portals() {
                             color: "from-purple-500/20 to-pink-500/20",
                             iconColor: "text-purple-400",
                             role: "faculty"
+                        },
+                        {
+                            title: "Counselor Portal",
+                            desc: "Support student wellness, manage counseling sessions, and provide guidance.",
+                            icon: Heart,
+                            color: "from-rose-500/20 to-pink-500/20",
+                            iconColor: "text-rose-400",
+                            role: "counselor"
                         },
                         {
                             title: "Admin Portal",

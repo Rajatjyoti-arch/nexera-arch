@@ -105,6 +105,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           department: adminProfile.department || undefined,
         };
       }
+    } else if (role === 'counselor') {
+      const counselorProfile = await authService.getCounselorProfile(supabaseUser.id);
+      if (counselorProfile) {
+        profile = {
+          ...profile,
+          name: counselorProfile.name,
+          avatar: counselorProfile.avatar_url || undefined,
+          department: counselorProfile.department || undefined,
+          designation: counselorProfile.designation || undefined,
+        };
+      }
     }
 
     return profile;

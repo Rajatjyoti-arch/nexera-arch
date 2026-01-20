@@ -824,6 +824,33 @@ export default function StudentProfile() {
                   })}
                 </div>
               </section>
+
+              {/* Quick Links */}
+              <section>
+                <h2 className="text-[10px] font-black text-foreground/60 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                  <Shield className="w-4 h-4" />
+                  Quick Links
+                </h2>
+                <div
+                  onClick={() => window.open("https://vani-arch.vercel.app/", "_blank")}
+                  className="premium-card card-purple p-6 cursor-pointer group hover:border-purple-500/40 transition-all"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="icon-box bg-purple-500/20">
+                      <Shield className="w-5 h-5 text-purple-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-base font-bold text-foreground/90 group-hover:text-purple-400 transition-colors">
+                        VANI Platform
+                      </h3>
+                      <p className="text-[10px] text-foreground/60 mt-1">
+                        Report grievances anonymously and securely
+                      </p>
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-foreground/40 group-hover:text-purple-400 transition-colors" />
+                  </div>
+                </div>
+              </section>
             </div>
           </div>
         </section>

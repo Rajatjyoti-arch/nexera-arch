@@ -16,6 +16,7 @@ import StudentChats from "./pages/student/StudentChats";
 import StudentNetwork from "./pages/student/StudentNetwork";
 import StudentWellness from "./pages/student/StudentWellness";
 import StudentProfile from "./pages/student/StudentProfile";
+import Vani from "./pages/student/Vani";
 import FacultyHome from "./pages/faculty/FacultyHome";
 import FacultyChats from "./pages/faculty/FacultyChats";
 import FacultyClasses from "./pages/faculty/FacultyClasses";
@@ -27,6 +28,12 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAcademics from "./pages/admin/AdminAcademics";
 import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
 import AdminReports from "./pages/admin/AdminReports";
+import AdminCounselors from "./pages/admin/AdminCounselors";
+import CounselorLogin from "./pages/counselor/CounselorLogin";
+import CounselorHome from "./pages/counselor/CounselorHome";
+import CounselorStudents from "./pages/counselor/CounselorStudents";
+import CounselorChats from "./pages/counselor/CounselorChats";
+import CounselorProfile from "./pages/counselor/CounselorProfile";
 import Portals from "./pages/Portals";
 import About from "./pages/About";
 import Team from "./pages/Team";
@@ -83,7 +90,7 @@ const AppRoutes = () => {
         <Route path="/student/login" element={isAuthenticated ? <Navigate to="/student" replace /> : <StudentLogin />} />
         <Route path="/faculty/login" element={isAuthenticated ? <Navigate to="/faculty" replace /> : <FacultyLogin />} />
         <Route path="/admin/login" element={isAuthenticated ? <Navigate to="/admin" replace /> : <AdminLogin />} />
-
+        <Route path="/counselor/login" element={isAuthenticated ? <Navigate to="/counselor" replace /> : <CounselorLogin />} />
         {/* Informational Routes */}
         <Route path="/about" element={<About />} />
         <Route path="/team" element={<Team />} />
@@ -102,6 +109,7 @@ const AppRoutes = () => {
         <Route path="/student/network" element={<ProtectedRoute allowedRole="student"><StudentNetwork /></ProtectedRoute>} />
         <Route path="/student/wellness" element={<ProtectedRoute allowedRole="student"><StudentWellness /></ProtectedRoute>} />
         <Route path="/student/profile" element={<ProtectedRoute allowedRole="student"><StudentProfile /></ProtectedRoute>} />
+        <Route path="/student/vani" element={<ProtectedRoute allowedRole="student"><Vani /></ProtectedRoute>} />
 
         {/* Faculty Routes */}
         <Route path="/faculty" element={<ProtectedRoute allowedRole="faculty"><FacultyHome /></ProtectedRoute>} />
@@ -114,9 +122,16 @@ const AppRoutes = () => {
         {/* Admin Routes */}
         <Route path="/admin" element={<ProtectedRoute allowedRole="admin"><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/users" element={<ProtectedRoute allowedRole="admin"><AdminUsers /></ProtectedRoute>} />
+        <Route path="/admin/counselors" element={<ProtectedRoute allowedRole="admin"><AdminCounselors /></ProtectedRoute>} />
         <Route path="/admin/academics" element={<ProtectedRoute allowedRole="admin"><AdminAcademics /></ProtectedRoute>} />
         <Route path="/admin/announcements" element={<ProtectedRoute allowedRole="admin"><AdminAnnouncements /></ProtectedRoute>} />
         <Route path="/admin/reports" element={<ProtectedRoute allowedRole="admin"><AdminReports /></ProtectedRoute>} />
+
+        {/* Counselor Routes */}
+        <Route path="/counselor" element={<ProtectedRoute allowedRole="counselor"><CounselorHome /></ProtectedRoute>} />
+        <Route path="/counselor/students" element={<ProtectedRoute allowedRole="counselor"><CounselorStudents /></ProtectedRoute>} />
+        <Route path="/counselor/chats" element={<ProtectedRoute allowedRole="counselor"><CounselorChats /></ProtectedRoute>} />
+        <Route path="/counselor/profile" element={<ProtectedRoute allowedRole="counselor"><CounselorProfile /></ProtectedRoute>} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
