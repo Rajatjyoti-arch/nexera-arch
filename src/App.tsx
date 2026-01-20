@@ -139,18 +139,26 @@ const AppRoutes = () => {
   );
 };
 
+function AppWithProviders() {
+  const { user } = useAuth();
+  
+  return (
+    <SettingsProvider user={user}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner position="top-center" expand={false} richColors />
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AppRoutes />
+        </BrowserRouter>
+      </TooltipProvider>
+    </SettingsProvider>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <SettingsProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner position="top-center" expand={false} richColors />
-          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-            <AppRoutes />
-          </BrowserRouter>
-        </TooltipProvider>
-      </SettingsProvider>
+      <AppWithProviders />
     </AuthProvider>
   </QueryClientProvider>
 );
