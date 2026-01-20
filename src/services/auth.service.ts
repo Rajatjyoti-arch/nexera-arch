@@ -166,5 +166,20 @@ export const authService = {
     }
     
     return data;
+  },
+
+  async getCounselorProfile(userId: string) {
+    const { data, error } = await supabase
+      .from('counselor_profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error fetching counselor profile:", error);
+      return null;
+    }
+    
+    return data;
   }
 };

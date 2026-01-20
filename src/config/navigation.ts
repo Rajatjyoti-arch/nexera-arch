@@ -29,6 +29,7 @@ export const studentNavItems: NavItem[] = [
     { path: "/student/chats", icon: MessageCircle, label: "Messages", colorClass: "nav-indigo" },
     { path: "/student/network", icon: Users, label: "Network", colorClass: "nav-teal" },
     { path: "/student/wellness", icon: Heart, label: "Wellness", colorClass: "nav-rose" },
+    { path: "/student/vani", icon: Shield, label: "Vani", colorClass: "nav-purple" },
     { path: "/student/profile", icon: User, label: "Profile", colorClass: "nav-amber" },
 ];
 
