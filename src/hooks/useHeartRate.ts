@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { subDays, subMonths } from 'date-fns';
 
 export interface HeartRateReading {
   id: string;
@@ -40,6 +41,48 @@ export function useHeartRateReadings(limit = 50) {
       
       if (error) {
         console.error('Error fetching heart rate readings:', error);
+        return [];
+      }
+      
+      return data || [];
+    },
+    enabled: !!user?.id,
+  });
+}
+
+// Get heart rate history for trends chart
+export function useHeartRateHistory(timeRange: 'week' | 'month' | '3months' = 'week') {
+  const { user } = useAuth();
+  
+  return useQuery({
+    queryKey: ['heartRateHistory', user?.id, timeRange],
+    queryFn: async (): Promise<HeartRateReading[]> => {
+      if (!user?.id) return [];
+      
+      const now = new Date();
+      let startDate: Date;
+      
+      switch (timeRange) {
+        case 'week':
+          startDate = subDays(now, 7);
+          break;
+        case 'month':
+          startDate = subDays(now, 30);
+          break;
+        case '3months':
+          startDate = subMonths(now, 3);
+          break;
+      }
+      
+      const { data, error } = await supabase
+        .from('heart_rate_readings')
+        .select('*')
+        .eq('user_id', user.id)
+        .gte('measured_at', startDate.toISOString())
+        .order('measured_at', { ascending: true });
+      
+      if (error) {
+        console.error('Error fetching heart rate history:', error);
         return [];
       }
       
