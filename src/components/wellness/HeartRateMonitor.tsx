@@ -270,11 +270,11 @@ export default function HeartRateMonitor() {
         Heart Rate Monitor
       </h2>
       
-      <div className="premium-card card-rose p-6 space-y-6">
-        {/* Camera View - Large when active */}
+      <div className="premium-card card-rose p-8 space-y-8">
+        {/* Camera View - Full width, large */}
         <div className={cn(
-          "relative bg-black/50 rounded-xl overflow-hidden transition-all duration-300",
-          cameraActive ? "aspect-[4/3] md:aspect-video min-h-[400px] md:min-h-[480px]" : "aspect-video"
+          "relative bg-black rounded-2xl overflow-hidden transition-all duration-300",
+          cameraActive ? "aspect-[4/3] min-h-[500px] lg:min-h-[600px]" : "aspect-[4/3] min-h-[350px]"
         )}>
           <video
             ref={videoRef}
@@ -288,18 +288,19 @@ export default function HeartRateMonitor() {
           <canvas ref={canvasRef} className="hidden" />
           
           {!cameraActive && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-black/40 to-black/60">
-              <div className="w-20 h-20 rounded-full bg-rose-500/20 border border-rose-500/30 flex items-center justify-center backdrop-blur-sm">
-                <Camera className="w-10 h-10 text-rose-400" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 bg-gradient-to-b from-black/40 to-black/60">
+              <div className="w-28 h-28 rounded-full bg-rose-500/20 border-2 border-rose-500/30 flex items-center justify-center backdrop-blur-sm">
+                <Camera className="w-14 h-14 text-rose-400" />
               </div>
-              <p className="text-sm text-white/80 text-center max-w-xs px-4">
+              <p className="text-lg text-white/80 text-center max-w-md px-6">
                 Use your webcam to measure heart rate using rPPG technology
               </p>
               <Button
                 onClick={startCamera}
-                className="bg-rose-500 hover:bg-rose-600 text-black font-bold shadow-lg shadow-rose-500/25"
+                size="lg"
+                className="bg-rose-500 hover:bg-rose-600 text-black font-bold shadow-lg shadow-rose-500/25 text-base px-8 py-6 h-auto"
               >
-                <Camera className="w-4 h-4 mr-2" />
+                <Camera className="w-5 h-5 mr-3" />
                 Start Camera
               </Button>
             </div>
@@ -328,17 +329,17 @@ export default function HeartRateMonitor() {
               {/* Face guide overlay */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className={cn(
-                  "w-48 h-64 md:w-56 md:h-72 border-2 border-dashed rounded-[50%] transition-colors",
+                  "w-56 h-72 md:w-72 md:h-96 border-2 border-dashed rounded-[50%] transition-colors",
                   faceDetected ? "border-emerald-500/50" : "border-white/30"
                 )} />
               </div>
               
               {/* Feedback */}
-              <div className="absolute bottom-4 left-4 right-4">
-                <div className="bg-black/70 backdrop-blur-sm rounded-lg px-6 py-4">
-                  <p className="text-sm text-white font-medium text-center">{feedback}</p>
+              <div className="absolute bottom-6 left-6 right-6">
+                <div className="bg-black/70 backdrop-blur-sm rounded-xl px-8 py-5">
+                  <p className="text-base text-white font-medium text-center">{feedback}</p>
                   {status === 'measuring' && (
-                    <Progress value={progress} className="mt-3 h-3" />
+                    <Progress value={progress} className="mt-4 h-4" />
                   )}
                 </div>
               </div>
