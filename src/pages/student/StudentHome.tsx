@@ -14,14 +14,17 @@ import {
   LifeBuoy,
   Sparkles,
   TrendingUp,
-  Loader2
+  Loader2,
+  BarChart3
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { StatsGrid, StatItem } from "@/components/dashboard/StatsGrid";
 import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
 import { SectionContainer } from "@/components/dashboard/SectionContainer";
+import { ClassRoutineDashboard } from "@/components/dashboard/ClassRoutineDashboard";
 import { useStudentDashboard, formatTimeForDisplay, TodayClass } from "@/hooks/useStudentDashboard";
+import { useStudentClasses } from "@/hooks/useStudentClasses";
 import { useNavigate } from "react-router-dom";
 
 // Map class status to visual styling
@@ -58,6 +61,7 @@ export default function StudentHome() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { data: dashboardData, isLoading, error } = useStudentDashboard();
+  const { data: classesData, isLoading: classesLoading } = useStudentClasses();
 
   // Build stats from real data
   const stats: StatItem[] = [
@@ -281,6 +285,36 @@ export default function StudentHome() {
             </div>
           </SectionContainer>
         </div>
+
+        {/* Class Routine Dashboard */}
+        <SectionContainer 
+          title="Class Routine Analytics" 
+          icon={BarChart3}
+          action={
+            <button 
+              onClick={() => navigate('/student/classes')}
+              className="text-[10px] font-black text-foreground/70 uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-2 group"
+            >
+              View Timetable <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+            </button>
+          }
+        >
+          {classesLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          ) : classesData?.classes ? (
+            <ClassRoutineDashboard 
+              classes={classesData.classes} 
+              currentDay={classesData.currentDay} 
+            />
+          ) : (
+            <div className="text-center py-12">
+              <Calendar className="w-12 h-12 mx-auto text-foreground/30 mb-4" />
+              <p className="text-foreground/60 font-medium">No class data available</p>
+            </div>
+          )}
+        </SectionContainer>
 
         {/* Footer Resources Section */}
         <SectionContainer title="Updates & Resources" icon={BookOpen}>
