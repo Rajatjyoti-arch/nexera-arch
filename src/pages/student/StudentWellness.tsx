@@ -29,6 +29,7 @@ import FocusTimer from "@/components/wellness/FocusTimer";
 import WellnessProgress from "@/components/wellness/WellnessProgress";
 import CounselorBooking from "@/components/wellness/CounselorBooking";
 import HeartRateMonitor from "@/components/wellness/HeartRateMonitor";
+import HeartRateTrends from "@/components/wellness/HeartRateTrends";
 import CounselorList from "@/components/wellness/CounselorList";
 
 
@@ -401,6 +402,9 @@ export default function StudentWellness() {
 
               {/* Heart Rate Monitor Section */}
               <HeartRateMonitor />
+
+              {/* Heart Rate Trends Chart */}
+              <HeartRateTrends />
 
               {/* Counselor Booking Section */}
               <CounselorBooking />

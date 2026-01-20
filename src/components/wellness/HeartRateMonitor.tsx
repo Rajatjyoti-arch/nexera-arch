@@ -271,8 +271,11 @@ export default function HeartRateMonitor() {
       </h2>
       
       <div className="premium-card card-rose p-6 space-y-6">
-        {/* Camera View */}
-        <div className="relative aspect-video bg-black/50 rounded-xl overflow-hidden">
+        {/* Camera View - Large when active */}
+        <div className={cn(
+          "relative bg-black/50 rounded-xl overflow-hidden transition-all duration-300",
+          cameraActive ? "aspect-[4/3] md:aspect-video min-h-[400px] md:min-h-[480px]" : "aspect-video"
+        )}>
           <video
             ref={videoRef}
             className={cn(
@@ -314,20 +317,28 @@ export default function HeartRateMonitor() {
               {/* Status indicator */}
               <div className="absolute top-4 left-4 flex items-center gap-2">
                 <div className={cn(
-                  'w-3 h-3 rounded-full animate-pulse',
+                  'w-4 h-4 rounded-full animate-pulse',
                   status === 'measuring' ? 'bg-emerald-500' : 'bg-rose-500'
                 )} />
-                <span className="text-xs font-bold text-white bg-black/50 px-2 py-1 rounded">
+                <span className="text-sm font-bold text-white bg-black/50 px-3 py-1.5 rounded-lg">
                   {status === 'measuring' ? 'MEASURING' : status === 'complete' ? 'COMPLETE' : 'READY'}
                 </span>
               </div>
               
+              {/* Face guide overlay */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className={cn(
+                  "w-48 h-64 md:w-56 md:h-72 border-2 border-dashed rounded-[50%] transition-colors",
+                  faceDetected ? "border-emerald-500/50" : "border-white/30"
+                )} />
+              </div>
+              
               {/* Feedback */}
               <div className="absolute bottom-4 left-4 right-4">
-                <div className="bg-black/70 backdrop-blur-sm rounded-lg px-4 py-3">
-                  <p className="text-xs text-white font-medium text-center">{feedback}</p>
+                <div className="bg-black/70 backdrop-blur-sm rounded-lg px-6 py-4">
+                  <p className="text-sm text-white font-medium text-center">{feedback}</p>
                   {status === 'measuring' && (
-                    <Progress value={progress} className="mt-2 h-2" />
+                    <Progress value={progress} className="mt-3 h-3" />
                   )}
                 </div>
               </div>
