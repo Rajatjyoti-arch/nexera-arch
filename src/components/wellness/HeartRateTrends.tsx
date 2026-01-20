@@ -70,26 +70,26 @@ export default function HeartRateTrends() {
 
       <div className="premium-card card-rose p-6 lg:p-8 space-y-6 flex-1 flex flex-col">
         {/* Stats Overview */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div className="text-center p-5 rounded-xl bg-foreground/5">
-            <p className="text-4xl font-bold text-rose-500">{stats.avg || '--'}</p>
-            <p className="text-xs text-foreground/60 uppercase tracking-widest mt-2">Avg BPM</p>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="text-center p-4 rounded-xl bg-foreground/5">
+            <p className="text-2xl lg:text-3xl font-bold text-rose-500">{stats.avg || '--'}</p>
+            <p className="text-[10px] text-foreground/60 uppercase tracking-widest mt-1">Avg BPM</p>
           </div>
-          <div className="text-center p-5 rounded-xl bg-foreground/5">
-            <p className="text-4xl font-bold text-blue-500">{stats.min || '--'}</p>
-            <p className="text-xs text-foreground/60 uppercase tracking-widest mt-2">Min</p>
+          <div className="text-center p-4 rounded-xl bg-foreground/5">
+            <p className="text-2xl lg:text-3xl font-bold text-blue-500">{stats.min || '--'}</p>
+            <p className="text-[10px] text-foreground/60 uppercase tracking-widest mt-1">Min</p>
           </div>
-          <div className="text-center p-5 rounded-xl bg-foreground/5">
-            <p className="text-4xl font-bold text-orange-500">{stats.max || '--'}</p>
-            <p className="text-xs text-foreground/60 uppercase tracking-widest mt-2">Max</p>
+          <div className="text-center p-4 rounded-xl bg-foreground/5">
+            <p className="text-2xl lg:text-3xl font-bold text-orange-500">{stats.max || '--'}</p>
+            <p className="text-[10px] text-foreground/60 uppercase tracking-widest mt-1">Max</p>
           </div>
-          <div className="text-center p-5 rounded-xl bg-foreground/5">
-            <div className="flex items-center justify-center gap-2">
-              {trend.direction === 'up' && <ArrowUp className="w-6 h-6 text-orange-500" />}
-              {trend.direction === 'down' && <ArrowDown className="w-6 h-6 text-blue-500" />}
-              {trend.direction === 'stable' && <Minus className="w-6 h-6 text-emerald-500" />}
+          <div className="text-center p-4 rounded-xl bg-foreground/5">
+            <div className="flex items-center justify-center gap-1">
+              {trend.direction === 'up' && <ArrowUp className="w-4 h-4 text-orange-500" />}
+              {trend.direction === 'down' && <ArrowDown className="w-4 h-4 text-blue-500" />}
+              {trend.direction === 'stable' && <Minus className="w-4 h-4 text-emerald-500" />}
               <span className={cn(
-                'text-4xl font-bold',
+                'text-2xl lg:text-3xl font-bold',
                 trend.direction === 'up' && 'text-orange-500',
                 trend.direction === 'down' && 'text-blue-500',
                 trend.direction === 'stable' && 'text-emerald-500'
@@ -97,7 +97,7 @@ export default function HeartRateTrends() {
                 {Math.abs(trend.change)}%
               </span>
             </div>
-            <p className="text-xs text-foreground/60 uppercase tracking-widest mt-2">Trend</p>
+            <p className="text-[10px] text-foreground/60 uppercase tracking-widest mt-1">Trend</p>
           </div>
         </div>
 
