@@ -34,14 +34,13 @@ interface User {
   name: string;
   email: string;
   role: "student" | "faculty";
-  status: "active" | "pending" | "suspended";
+  status: "active" | "suspended";
   department?: string;
   course?: string;
 }
 
 const mockUsers: User[] = [
   { id: "1", name: "Priyanshu Sharma", email: "priyanshu@dtu.ac.in", role: "student", status: "active", course: "B.Tech CSE" },
-  { id: "2", name: "Aisha Khan", email: "aisha@dtu.ac.in", role: "student", status: "pending", course: "B.Tech CSE" },
   { id: "3", name: "Dr. Anjali Mehta", email: "anjali.mehta@dtu.ac.in", role: "faculty", status: "active", department: "Computer Science" },
   { id: "4", name: "Rahul Verma", email: "rahul@dtu.ac.in", role: "student", status: "suspended", course: "B.Tech Mechanical" },
   { id: "5", name: "Prof. Suresh Kumar", email: "suresh.k@dtu.ac.in", role: "faculty", status: "active", department: "Electronics" },
@@ -60,7 +59,6 @@ export default function AdminUsers() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active": return "bg-success/10 text-success";
-      case "pending": return "bg-warning/10 text-warning";
       case "suspended": return "bg-destructive/10 text-destructive";
       default: return "";
     }
@@ -136,7 +134,6 @@ export default function AdminUsers() {
             <TabsTrigger value="all">All Users</TabsTrigger>
             <TabsTrigger value="students">Students</TabsTrigger>
             <TabsTrigger value="faculty">Faculty</TabsTrigger>
-            <TabsTrigger value="pending">Pending</TabsTrigger>
           </TabsList>
 
           <TabsContent value="all" className="mt-6">
@@ -164,12 +161,6 @@ export default function AdminUsers() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        {user.status === "pending" && (
-                          <DropdownMenuItem>
-                            <Check className="w-4 h-4 mr-2" />
-                            Approve
-                          </DropdownMenuItem>
-                        )}
                         {user.status !== "suspended" && (
                           <DropdownMenuItem className="text-destructive">
                             <X className="w-4 h-4 mr-2" />
@@ -226,34 +217,6 @@ export default function AdminUsers() {
                       <p className="text-sm text-foreground/70">{user.department}</p>
                     </div>
                     <Badge className={getStatusColor(user.status)}>{user.status}</Badge>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="pending" className="mt-6">
-            <Card>
-              <div className="divide-y divide-border">
-                {filteredUsers.filter(u => u.status === "pending").map((user) => (
-                  <div key={user.id} className="p-4 flex items-center gap-4">
-                    <Avatar>
-                      <AvatarFallback className="bg-student text-student-foreground">
-                        {user.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <p className="font-medium">{user.name}</p>
-                      <p className="text-sm text-foreground/70">{user.email}</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline">
-                        <Check className="w-4 h-4" />
-                      </Button>
-                      <Button size="sm" variant="outline" className="text-destructive">
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
                   </div>
                 ))}
               </div>

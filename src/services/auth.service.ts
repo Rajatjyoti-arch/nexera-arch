@@ -53,7 +53,6 @@ export const authService = {
           college: data.college || '',
           course: data.course || '',
           year: data.year || '',
-          status: 'pending'
         });
       
       if (profileError) {
