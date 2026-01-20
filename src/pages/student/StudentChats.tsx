@@ -11,9 +11,7 @@ import {
   ChevronLeft,
   MessageCircle,
   CheckCheck,
-  Paperclip,
   Smile,
-  Image,
   Mic,
   Users,
   Loader2
@@ -21,12 +19,18 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useChatsWithUnread, useMarkChatAsRead, useRealtimeMessages, useRealtimeChatMessages, ChatPreview } from "@/hooks/useMessages";
 import { useChatMessages, useSendMessage } from "@/hooks/useChat";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatDistanceToNow } from "date-fns";
 import { NewChatDialog } from "@/components/chat/NewChatDialog";
+import { useChatPresence, useGlobalPresence } from "@/hooks/useChatPresence";
+import { useChatAttachments } from "@/hooks/useChatAttachments";
+import { TypingIndicator } from "@/components/chat/TypingIndicator";
+import { OnlineIndicator } from "@/components/chat/OnlineIndicator";
+import { MessageAttachment } from "@/components/chat/MessageAttachment";
+import { AttachmentButton } from "@/components/chat/AttachmentButton";
 
 const getTypeColor = (type: string) => {
   switch (type) {
@@ -43,6 +47,7 @@ export default function StudentChats() {
   const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [newChatOpen, setNewChatOpen] = useState(false);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Fetch chats with unread counts
@@ -54,6 +59,14 @@ export default function StudentChats() {
   // Mutations
   const markAsRead = useMarkChatAsRead();
   const sendMessage = useSendMessage();
+
+  // Presence & typing indicators
+  const { onlineUsers: globalOnline, isUserOnline: isGlobalOnline } = useGlobalPresence();
+  const { getTypingIndicator, sendTypingStatus, isUserOnline } = useChatPresence(selectedChat?.id || null);
+  const typingIndicator = getTypingIndicator();
+
+  // Attachments
+  const { handleFileSelect, sendMessageWithAttachment, isUploading } = useChatAttachments(selectedChat?.id || null);
 
   // Realtime: subscribe to all message inserts for chat list updates
   const handleChatListUpdate = useCallback(() => {
@@ -88,15 +101,46 @@ export default function StudentChats() {
   }, [selectedChat?.id]);
 
   const handleSend = async () => {
-    if (!message.trim() || !selectedChat || sendMessage.isPending) return;
+    if ((!message.trim() && !pendingFile) || !selectedChat || sendMessage.isPending || isUploading) return;
+    
     const messageText = message.trim();
     setMessage(""); // Clear immediately for better UX
+    sendTypingStatus(false);
+
     try {
-      await sendMessage.mutateAsync({ chatId: selectedChat.id, content: messageText });
+      if (pendingFile) {
+        // Upload file and send with attachment
+        const attachment = await handleFileSelect(pendingFile);
+        if (attachment) {
+          await sendMessageWithAttachment.mutateAsync({
+            content: messageText || `Sent ${attachment.type === 'image' ? 'an image' : 'a file'}`,
+            attachmentUrl: attachment.url,
+            attachmentType: attachment.type,
+            attachmentName: attachment.name,
+          });
+        }
+        setPendingFile(null);
+      } else {
+        await sendMessage.mutateAsync({ chatId: selectedChat.id, content: messageText });
+      }
     } catch {
       // Restore message if send failed
       setMessage(messageText);
     }
+  };
+
+  // Handle typing
+  const handleTyping = (value: string) => {
+    setMessage(value);
+    if (value.trim()) {
+      sendTypingStatus(true);
+    } else {
+      sendTypingStatus(false);
+    }
+  };
+
+  const handleFileSelectWrapper = (file: File) => {
+    setPendingFile(file);
   };
 
   const filteredChats = (chats || []).filter(chat =>
@@ -227,6 +271,11 @@ export default function StudentChats() {
                           {(selectedChat.name || selectedChat.participants[0]?.name || 'U').split(" ").map(n => n[0]).join("")}
                         </AvatarFallback>
                       </Avatar>
+                      {selectedChat.type === 'direct' && selectedChat.participants[0] && (
+                        <div className="absolute -bottom-0.5 -right-0.5 p-0.5 bg-background rounded-full">
+                          <OnlineIndicator isOnline={isUserOnline(selectedChat.participants[0].userId)} size="md" />
+                        </div>
+                      )}
                     </div>
                     <div>
                       <h2 className="text-base font-bold text-foreground/90 flex items-center gap-2">
@@ -235,7 +284,7 @@ export default function StudentChats() {
                       <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/60">
                         {selectedChat.type === 'group' 
                           ? `${selectedChat.participants.length} members` 
-                          : 'Direct message'}
+                          : isUserOnline(selectedChat.participants[0]?.userId || '') ? 'Online' : 'Direct message'}
                       </p>
                     </div>
                   </div>
@@ -270,6 +319,7 @@ export default function StudentChats() {
                         const isOwn = msg.sender_id === user?.id;
                         const senderName = msg.sender?.name || 'Unknown';
                         const msgTime = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        const hasAttachment = !!(msg as any).attachment_url;
                         
                         return (
                           <motion.div
@@ -297,6 +347,14 @@ export default function StudentChats() {
                               )}>
                                 {msg.content}
                               </p>
+                              {hasAttachment && (
+                                <MessageAttachment
+                                  url={(msg as any).attachment_url}
+                                  type={(msg as any).attachment_type}
+                                  name={(msg as any).attachment_name}
+                                  isOwn={isOwn}
+                                />
+                              )}
                               <div className="flex items-center justify-end gap-1.5 mt-2">
                                 <span className={cn(
                                   "text-[10px] font-medium",
@@ -311,27 +369,33 @@ export default function StudentChats() {
                         );
                       })
                     )}
+                    {/* Typing indicator */}
+                    <AnimatePresence>
+                      {typingIndicator && (
+                        <TypingIndicator message={typingIndicator} />
+                      )}
+                    </AnimatePresence>
                     <div ref={scrollRef} />
                   </div>
                 </ScrollArea>
 
                 {/* Input Area */}
-                <div className="p-6 border-t border-border">
+                <div className="p-6 border-t border-border relative">
                   <div className="max-w-3xl mx-auto flex items-end gap-4">
-                    <div className="flex gap-1">
-                      <Button variant="ghost" size="icon" className="h-12 w-12 rounded-xl hover:bg-secondary btn-press border border-border text-foreground/80 hover:text-foreground/90">
-                        <Paperclip className="w-4 h-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-12 w-12 rounded-xl hover:bg-secondary btn-press border border-border text-foreground/80 hover:text-foreground/90">
-                        <Image className="w-4 h-4" />
-                      </Button>
+                    <div className="flex gap-1 relative">
+                      <AttachmentButton
+                        onFileSelect={handleFileSelectWrapper}
+                        isUploading={isUploading}
+                        pendingFile={pendingFile}
+                        onClearPending={() => setPendingFile(null)}
+                      />
                     </div>
 
                     <div className="flex-1 relative group">
                       <textarea
                         placeholder="Type a message..."
                         value={message}
-                        onChange={(e) => setMessage(e.target.value)}
+                        onChange={(e) => handleTyping(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" && !e.shiftKey) {
                             e.preventDefault();
@@ -355,10 +419,10 @@ export default function StudentChats() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={handleSend}
-                      disabled={sendMessage.isPending || !message.trim()}
+                      disabled={sendMessage.isPending || isUploading || (!message.trim() && !pendingFile)}
                       className="h-14 w-14 shrink-0 rounded-2xl bg-indigo-500 hover:bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 transition-all group text-black disabled:opacity-50"
                     >
-                      {sendMessage.isPending ? (
+                      {sendMessage.isPending || isUploading ? (
                         <Loader2 className="w-5 h-5 animate-spin" />
                       ) : (
                         <Send className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
