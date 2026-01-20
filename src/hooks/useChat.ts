@@ -124,43 +124,32 @@ export function useSendMessage() {
   });
 }
 
-// Create a new chat
+// Create a new chat (via backend function to avoid RLS edge cases)
 export function useCreateChat() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async ({ type, participantIds, name }: { type: 'direct' | 'group'; participantIds: string[]; name?: string }) => {
+    mutationFn: async ({
+      type,
+      participantIds,
+      name,
+    }: {
+      type: 'direct' | 'group';
+      participantIds: string[];
+      name?: string;
+    }) => {
       if (!user?.id) throw new Error('No user');
-      
-      // Create the chat
-      const { data: chat, error: chatError } = await supabase
-        .from('chats')
-        .insert({
-          type,
-          name: type === 'group' ? name : null,
-          created_by: user.id,
-        })
-        .select()
-        .single();
-      
-      if (chatError) throw chatError;
-      
-      // Add participants (including creator)
-      const allParticipantIds = [...new Set([user.id, ...participantIds])];
-      const participantInserts = allParticipantIds.map(participantId => ({
-        chat_id: chat.id,
-        user_id: participantId,
-        last_read_at: participantId === user.id ? new Date().toISOString() : null,
-      }));
-      
-      const { error: partError } = await supabase
-        .from('chat_participants')
-        .insert(participantInserts);
-      
-      if (partError) throw partError;
-      
-      return chat;
+
+      const { data, error } = await supabase.functions.invoke('chat-create', {
+        body:
+          type === 'direct'
+            ? { type: 'direct', otherUserId: participantIds[0] }
+            : { type: 'group', participantIds, name: name || '' },
+      });
+
+      if (error) throw error;
+      return data as { id: string; type: string; name: string | null; created_at: string; updated_at: string };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['chatsWithUnread'] });
@@ -169,75 +158,21 @@ export function useCreateChat() {
   });
 }
 
-// Find or create direct chat between two users
+// Find or create direct chat between two users (via backend function)
 export function useFindOrCreateDirectChat() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (otherUserId: string) => {
       if (!user?.id) throw new Error('No user');
-      
-      // Find existing direct chat
-      const { data: user1Chats } = await supabase
-        .from('chat_participants')
-        .select('chat_id')
-        .eq('user_id', user.id);
-      
-      const { data: user2Chats } = await supabase
-        .from('chat_participants')
-        .select('chat_id')
-        .eq('user_id', otherUserId);
-      
-      if (user1Chats && user2Chats) {
-        const user1ChatIds = new Set(user1Chats.map(c => c.chat_id));
-        const commonChatIds = user2Chats.filter(c => user1ChatIds.has(c.chat_id)).map(c => c.chat_id);
-        
-        for (const chatId of commonChatIds) {
-          const { data: chat } = await supabase
-            .from('chats')
-            .select('*')
-            .eq('id', chatId)
-            .eq('type', 'direct')
-            .maybeSingle();
-          
-          if (chat) {
-            // Check if it's only these two users
-            const { count } = await supabase
-              .from('chat_participants')
-              .select('*', { count: 'exact', head: true })
-              .eq('chat_id', chatId);
-            
-            if (count === 2) {
-              return chat;
-            }
-          }
-        }
-      }
-      
-      // Create new direct chat
-      const { data: newChat, error: chatError } = await supabase
-        .from('chats')
-        .insert({
-          type: 'direct',
-          created_by: user.id,
-        })
-        .select()
-        .single();
-      
-      if (chatError) throw chatError;
-      
-      // Add both participants
-      const { error: partError } = await supabase
-        .from('chat_participants')
-        .insert([
-          { chat_id: newChat.id, user_id: user.id, last_read_at: new Date().toISOString() },
-          { chat_id: newChat.id, user_id: otherUserId },
-        ]);
-      
-      if (partError) throw partError;
-      
-      return newChat;
+
+      const { data, error } = await supabase.functions.invoke('chat-create', {
+        body: { type: 'direct', otherUserId },
+      });
+
+      if (error) throw error;
+      return data as { id: string; type: string; name: string | null; created_at: string; updated_at: string; created_by?: string | null };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['chatsWithUnread'] });
