@@ -25,6 +25,7 @@ import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
 import { SectionContainer } from "@/components/dashboard/SectionContainer";
 import { ClassRoutineDashboard } from "@/components/dashboard/ClassRoutineDashboard";
 import { MiniTimetableWidget } from "@/components/dashboard/MiniTimetableWidget";
+import { WeeklyRoutineView } from "@/components/dashboard/WeeklyRoutineView";
 import { useStudentDashboard, formatTimeForDisplay, TodayClass } from "@/hooks/useStudentDashboard";
 import { useStudentClasses } from "@/hooks/useStudentClasses";
 import { useNavigate } from "react-router-dom";
@@ -324,10 +325,10 @@ export default function StudentHome() {
           </div>
         </div>
 
-        {/* Class Routine Dashboard */}
+        {/* Weekly Class Routine */}
         <SectionContainer 
-          title="Class Routine Analytics" 
-          icon={BarChart3}
+          title="Weekly Class Routine" 
+          icon={Calendar}
           action={
             <button 
               onClick={() => navigate('/student/classes')}
@@ -342,7 +343,7 @@ export default function StudentHome() {
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
           ) : classesData?.classes ? (
-            <ClassRoutineDashboard 
+            <WeeklyRoutineView 
               classes={classesData.classes} 
               currentDay={classesData.currentDay} 
             />
