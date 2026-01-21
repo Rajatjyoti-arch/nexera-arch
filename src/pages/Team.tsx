@@ -5,8 +5,9 @@ import { Github, Linkedin, Twitter } from "lucide-react";
 const team = [
     { name: "Abhinav Kumar", role: "Lead Architect", bio: "Specializing in distributed systems and high-availability campus infrastructure." },
     { name: "Harsh Saxena", role: "UI/UX Visionary", bio: "Pioneering interactive design systems that prioritize cognitive clarity and user delight." },
-    { name: "Priyanshu Gupta", role: "Full Stack Engineer", bio: "Expert in bridging complex backend logic with fluid, high-performance frontend experiences." },
-    { name: "Sakshi", role: "Product Strategist", bio: "Translating institutional requirements into actionable, user-centric product roadmaps." }
+    { name: "Rajat Gupta", role: "Full Stack Engineer", bio: "Expert in bridging complex backend logic with fluid, high-performance frontend experiences." },
+    { name: "Sakshi", role: "Product Strategist", bio: "Translating institutional requirements into actionable, user-centric product roadmaps." },
+    { name: "Mehak", role: "Quality Assurance Lead", bio: "Ensuring flawless user experiences through rigorous testing and quality standards." }
 ];
 
 export default function Team() {
