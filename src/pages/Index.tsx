@@ -523,8 +523,9 @@ export default function Index() {
             {[
               { name: "Abhinav", role: "Team Lead" },
               { name: "Harsh", role: "Finance Lead" },
-              { name: "Priyanshu", role: "Tech Lead" },
-              { name: "Sakshi", role: "Creative Lead" }
+              { name: "Rajat", role: "Tech Lead" },
+              { name: "Sakshi", role: "Creative Lead" },
+              { name: "Mehak", role: "QA Lead" }
             ].map((member, i) => (
               <motion.div
                 key={i}
