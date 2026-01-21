@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { LucideIcon, TrendingUp, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 export interface StatItem {
     label: string;
@@ -11,6 +12,7 @@ export interface StatItem {
     color?: string; // For minimal style icon color
     sub?: string; // Subtext (e.g. "this month")
     trend?: string; // Trend badge (e.g. "+12%")
+    path?: string; // Navigation path when clicked
 }
 
 interface StatsGridProps {
@@ -19,6 +21,14 @@ interface StatsGridProps {
 }
 
 export function StatsGrid({ stats, variant = "minimal" }: StatsGridProps) {
+    const navigate = useNavigate();
+
+    const handleClick = (path?: string) => {
+        if (path) {
+            navigate(path);
+        }
+    };
+
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, i) => (
@@ -27,9 +37,11 @@ export function StatsGrid({ stats, variant = "minimal" }: StatsGridProps) {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.1 }}
+                    onClick={() => handleClick(stat.path)}
+                    className={stat.path ? "cursor-pointer" : ""}
                 >
                     {variant === "colorful" ? (
-                        <div className={cn("premium-card p-6 group cursor-pointer", stat.colorClass)}>
+                        <div className={cn("premium-card p-6 group", stat.path ? "cursor-pointer" : "cursor-default", stat.colorClass)}>
                             <div className="flex justify-between items-start mb-6">
                                 <div className="icon-box">
                                     <stat.icon className="w-5 h-5" />
@@ -48,7 +60,7 @@ export function StatsGrid({ stats, variant = "minimal" }: StatsGridProps) {
                             )}
                         </div>
                     ) : (
-                        <div className={cn("premium-card p-6 group cursor-default", stat.bg || stat.colorClass)}>
+                        <div className={cn("premium-card p-6 group", stat.path ? "cursor-pointer" : "cursor-default", stat.bg || stat.colorClass)}>
                             <div className="flex items-start justify-between mb-4">
                                 {stat.bg ? (
                                     // Minimal style with colored background icon box
