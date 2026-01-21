@@ -72,28 +72,31 @@ export default function StudentHome() {
       value: String(dashboardData?.stats.unreadMessages || 0), 
       sub: "unread messages", 
       icon: MessageSquare, 
-      colorClass: "card-indigo" 
+      colorClass: "card-indigo",
+      path: "/student/chats"
     },
     { 
       label: "Classes", 
       value: String(dashboardData?.stats.totalClasses || 0), 
       sub: `${dashboardData?.stats.todaysClasses || 0} today`, 
       icon: BookOpen, 
-      colorClass: "card-teal" 
+      colorClass: "card-teal",
+      path: "/student/classes"
     },
     { 
       label: "Wellness", 
       value: "Check", 
       sub: "Track your mood", 
       icon: Heart, 
-      colorClass: "card-rose" 
+      colorClass: "card-rose",
+      path: "/student/wellness"
     },
     { 
       label: "Notices", 
       value: String(dashboardData?.stats.unreadNotices || 0), 
       sub: "unread notices", 
       icon: Bell, 
-      colorClass: "card-amber" 
+      colorClass: "card-amber"
     },
   ];
 
