@@ -465,7 +465,7 @@ export default function StudentWellness() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsChatOpen(true)}
-            className="fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-violet-500 hover:bg-violet-600 flex items-center justify-center shadow-2xl shadow-violet-500/40 transition-colors"
+            className="fixed bottom-6 right-24 z-50 w-16 h-16 rounded-full bg-violet-500 hover:bg-violet-600 flex items-center justify-center shadow-2xl shadow-violet-500/40 transition-colors"
           >
             <MessageCircle className="w-7 h-7 text-black" />
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-online rounded-full border-2 border-background animate-pulse" />
@@ -480,7 +480,7 @@ export default function StudentWellness() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 z-50 w-[420px] h-[600px] max-w-[calc(100vw-3rem)] max-h-[calc(100vh-6rem)] flex flex-col rounded-3xl overflow-hidden shadow-2xl shadow-black/30 border border-border bg-card"
+            className="fixed bottom-6 right-24 z-50 w-[420px] h-[600px] max-w-[calc(100vw-3rem)] max-h-[calc(100vh-6rem)] flex flex-col rounded-3xl overflow-hidden shadow-2xl shadow-black/30 border border-border bg-card"
           >
             {/* Chat Header */}
             <div className="p-5 border-b border-border flex items-center justify-between bg-secondary/10">
