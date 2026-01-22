@@ -58,7 +58,10 @@ export default function StudentWellness() {
   const [isMaximized, setIsMaximized] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [activeExercise, setActiveExercise] = useState<'breathing' | 'meditation' | 'focus' | null>(null);
+  const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const constraintsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Initialize with welcome message if no messages exist
@@ -455,20 +458,42 @@ export default function StudentWellness() {
         </section>
       </div>
 
-      {/* Floating Chat Button */}
+      {/* Drag constraints container */}
+      <div ref={constraintsRef} className="fixed inset-0 pointer-events-none z-40" />
+
+      {/* Floating Draggable Chat Button */}
       <AnimatePresence>
         {!isChatOpen && !isMaximized && (
           <motion.button
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            drag
+            dragConstraints={constraintsRef}
+            dragElastic={0.1}
+            dragMomentum={false}
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={(_, info) => {
+              setIsDragging(false);
+              setButtonPosition(prev => ({
+                x: prev.x + info.offset.x,
+                y: prev.y + info.offset.y
+              }));
+            }}
+            initial={{ scale: 0, opacity: 0, x: buttonPosition.x, y: buttonPosition.y }}
+            animate={{ scale: 1, opacity: 1, x: buttonPosition.x, y: buttonPosition.y }}
             exit={{ scale: 0, opacity: 0 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setIsChatOpen(true)}
-            className="fixed bottom-6 right-24 z-50 w-16 h-16 rounded-full bg-violet-500 hover:bg-violet-600 flex items-center justify-center shadow-2xl shadow-violet-500/40 transition-colors"
+            whileHover={!isDragging ? { scale: 1.1 } : {}}
+            whileTap={!isDragging ? { scale: 0.95 } : {}}
+            onClick={() => {
+              if (!isDragging) setIsChatOpen(true);
+            }}
+            className="fixed bottom-6 right-24 z-50 w-16 h-16 rounded-full bg-violet-500 hover:bg-violet-600 flex items-center justify-center shadow-2xl shadow-violet-500/40 transition-colors cursor-grab active:cursor-grabbing pointer-events-auto"
+            title="Drag to move • Click to open"
           >
-            <MessageCircle className="w-7 h-7 text-black" />
+            <MessageCircle className="w-7 h-7 text-black pointer-events-none" />
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-online rounded-full border-2 border-background animate-pulse" />
+            {/* Drag indicator */}
+            <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-background/80 rounded-full border border-violet-500/50 flex items-center justify-center">
+              <div className="w-1.5 h-1.5 bg-violet-500 rounded-full" />
+            </div>
           </motion.button>
         )}
       </AnimatePresence>
@@ -477,10 +502,15 @@ export default function StudentWellness() {
       <AnimatePresence>
         {isChatOpen && !isMaximized && (
           <motion.div
+            drag
+            dragConstraints={constraintsRef}
+            dragElastic={0.1}
+            dragMomentum={false}
+            dragListener={false}
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-24 z-50 w-[420px] h-[600px] max-w-[calc(100vw-3rem)] max-h-[calc(100vh-6rem)] flex flex-col rounded-3xl overflow-hidden shadow-2xl shadow-black/30 border border-border bg-card"
+            className="fixed bottom-6 right-24 z-50 w-[420px] h-[600px] max-w-[calc(100vw-3rem)] max-h-[calc(100vh-6rem)] flex flex-col rounded-3xl overflow-hidden shadow-2xl shadow-black/30 border border-border bg-card pointer-events-auto"
           >
             {/* Chat Header */}
             <div className="p-5 border-b border-border flex items-center justify-between bg-secondary/10">
