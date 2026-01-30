@@ -234,36 +234,36 @@ export default function Index() {
               </div>
             </motion.div>
 
-            {/* Card 2 - Always liquid (Dark) */}
+            {/* Card 2 - Always accessible */}
             <motion.div 
               variants={itemVariants}
-              className="bento-card-navy"
+              className="bento-card-accent"
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
-                  <Droplets className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                  <Droplets className="w-6 h-6 text-primary" />
                 </div>
               </div>
-              <h3 className="text-xl font-bold mb-3 text-white">Always accessible,<br />always stable</h3>
-              <p className="text-white/70 text-sm leading-relaxed">
+              <h3 className="text-xl font-bold mb-3">Always accessible,<br />always stable</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 Stay fully connected with
                 instant access to your classes—
                 no lockups or delays.
               </p>
             </motion.div>
 
-            {/* Card 3 - 100% hands-free (Dark) */}
+            {/* Card 3 - 100% hands-free */}
             <motion.div 
               variants={itemVariants}
-              className="bento-card-navy"
+              className="bento-card-accent"
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
-                  <Settings className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                  <Settings className="w-6 h-6 text-primary" />
                 </div>
               </div>
-              <h3 className="text-xl font-bold mb-3 text-white">100%<br />hands-free</h3>
-              <p className="text-white/70 text-sm leading-relaxed">
+              <h3 className="text-xl font-bold mb-3">100%<br />hands-free</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 No need to manage schedules
                 manually. NexEra works
                 in the background for you.
@@ -351,7 +351,7 @@ export default function Index() {
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                   className="relative w-48 h-48 md:w-64 md:h-64"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-lavender-soft via-purple-100 to-pink-100 dark:from-purple-900/30 dark:via-primary/20 dark:to-pink-900/30 rounded-3xl" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-lavender-soft via-purple-100 to-pink-100 rounded-3xl" />
                   <div className="absolute inset-4 flex items-center justify-center">
                     <Building2 className="w-24 h-24 md:w-32 md:h-32 text-primary/80" strokeWidth={1} />
                   </div>
@@ -395,9 +395,9 @@ export default function Index() {
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
                   className="relative w-48 h-48 md:w-64 md:h-64"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 via-teal-50 to-cyan-100 dark:from-emerald-900/30 dark:via-teal-900/20 dark:to-cyan-900/30 rounded-3xl" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 via-teal-50 to-cyan-100 rounded-3xl" />
                   <div className="absolute inset-4 flex items-center justify-center">
-                    <Shield className="w-24 h-24 md:w-32 md:h-32 text-emerald-600/80 dark:text-emerald-400/80" strokeWidth={1} />
+                    <Shield className="w-24 h-24 md:w-32 md:h-32 text-emerald-600/80" strokeWidth={1} />
                   </div>
                 </motion.div>
               </div>

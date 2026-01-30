@@ -52,40 +52,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  .dark {
-    /* Dark Mode with BloomFi palette */
-    --background: 228 20% 7%;
-    --foreground: 0 0% 98%;
-    --card: 228 18% 10%;
-    --card-foreground: 0 0% 98%;
-    --popover: 228 18% 10%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 262 80% 65%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 228 15% 15%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 228 15% 15%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 228 15% 18%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 228 15% 20%;
-    --input: 228 15% 20%;
-    --ring: 262 80% 65%;
-
-    --navy: 228 20% 12%;
-    --navy-light: 228 15% 18%;
-
-    --sidebar-background: 228 18% 10%;
-    --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 0 0% 98%;
-    --sidebar-primary-foreground: 228 15% 10%;
-    --sidebar-accent: 228 15% 15%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 228 15% 20%;
-    --sidebar-ring: 262 80% 65%;
-  }
+  /* Dark mode removed - light theme only */
 
   * {
     @apply border-border;
@@ -126,14 +93,6 @@
     @apply shadow-soft-lg border-primary/20 -translate-y-1;
   }
 
-  .bloom-card-dark {
-    @apply bg-navy text-white rounded-3xl border border-white/10 shadow-soft transition-all duration-300 overflow-hidden;
-  }
-
-  .bloom-card-dark:hover {
-    @apply shadow-soft-lg border-primary/30 -translate-y-1;
-  }
-
   /* Bento Grid Cards */
   .bento-card {
     @apply bg-card rounded-3xl border border-border p-6 md:p-8 transition-all duration-300 hover:shadow-soft-lg hover:border-primary/20 hover:-translate-y-1;
@@ -143,8 +102,8 @@
     @apply bg-gradient-to-br from-lavender-soft to-white rounded-3xl border border-primary/20 p-6 md:p-8 transition-all duration-300 hover:shadow-glow hover:-translate-y-1;
   }
 
-  .bento-card-navy {
-    @apply bg-navy text-white rounded-3xl border border-white/10 p-6 md:p-8 transition-all duration-300 hover:shadow-soft-lg hover:border-primary/30 hover:-translate-y-1;
+  .bento-card-accent {
+    @apply bg-gradient-to-br from-secondary to-muted rounded-3xl border border-border p-6 md:p-8 transition-all duration-300 hover:shadow-soft-lg hover:border-primary/20 hover:-translate-y-1;
   }
 
   /* Premium card variants preserved */
