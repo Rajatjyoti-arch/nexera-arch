@@ -81,29 +81,49 @@
   }
 
   .glass-card {
-    @apply bg-card/95 backdrop-blur-2xl border border-border shadow-soft transition-all duration-300;
+    @apply bg-card/95 backdrop-blur-2xl border border-border shadow-lg transition-all duration-300;
   }
 
   /* BloomFi Card Styles */
   .bloom-card {
-    @apply bg-card rounded-3xl border border-border shadow-soft transition-all duration-300 overflow-hidden;
+    @apply bg-card rounded-3xl border border-border/60 shadow-md transition-all duration-300 overflow-hidden;
+    box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.08), 0 2px 8px -2px rgba(0, 0, 0, 0.04);
   }
 
   .bloom-card:hover {
-    @apply shadow-soft-lg border-primary/20 -translate-y-1;
+    @apply border-primary/30 -translate-y-1;
+    box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.12), 0 4px 16px -4px rgba(0, 0, 0, 0.06);
   }
 
   /* Bento Grid Cards */
   .bento-card {
-    @apply bg-card rounded-3xl border border-border p-6 md:p-8 transition-all duration-300 hover:shadow-soft-lg hover:border-primary/20 hover:-translate-y-1;
+    @apply bg-card rounded-3xl border border-border/60 p-6 md:p-8 transition-all duration-300;
+    box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.06), 0 2px 8px -2px rgba(0, 0, 0, 0.03);
+  }
+
+  .bento-card:hover {
+    @apply border-primary/30 -translate-y-1;
+    box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.12), 0 6px 20px -6px rgba(0, 0, 0, 0.06);
   }
 
   .bento-card-featured {
-    @apply bg-gradient-to-br from-lavender-soft to-white rounded-3xl border border-primary/20 p-6 md:p-8 transition-all duration-300 hover:shadow-glow hover:-translate-y-1;
+    @apply bg-gradient-to-br from-lavender-soft via-white to-purple-50/50 rounded-3xl border border-primary/20 p-6 md:p-8 transition-all duration-300;
+    box-shadow: 0 8px 32px -8px rgba(139, 92, 246, 0.15), 0 4px 16px -4px rgba(0, 0, 0, 0.04);
+  }
+
+  .bento-card-featured:hover {
+    @apply border-primary/40 -translate-y-1;
+    box-shadow: 0 20px 60px -16px rgba(139, 92, 246, 0.25), 0 8px 24px -8px rgba(0, 0, 0, 0.06);
   }
 
   .bento-card-accent {
-    @apply bg-gradient-to-br from-secondary to-muted rounded-3xl border border-border p-6 md:p-8 transition-all duration-300 hover:shadow-soft-lg hover:border-primary/20 hover:-translate-y-1;
+    @apply bg-gradient-to-br from-secondary via-muted/50 to-background rounded-3xl border border-border/60 p-6 md:p-8 transition-all duration-300;
+    box-shadow: 0 6px 24px -6px rgba(0, 0, 0, 0.06), 0 3px 12px -3px rgba(0, 0, 0, 0.03);
+  }
+
+  .bento-card-accent:hover {
+    @apply border-primary/30 -translate-y-1;
+    box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.1), 0 6px 20px -6px rgba(0, 0, 0, 0.05);
   }
 
   /* Premium card variants preserved */
