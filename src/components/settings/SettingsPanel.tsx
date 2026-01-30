@@ -5,31 +5,21 @@ import { Label } from "@/components/ui/label";
 import {
   Settings,
   Sun,
-  Moon,
-  Monitor,
   Bell,
   MessageSquare,
   Clock,
   Volume2,
-  Check,
   Loader2,
   X,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useSettings, Theme } from "@/contexts/SettingsContext";
+import { useSettings } from "@/contexts/SettingsContext";
 
 interface SettingsPanelProps {
   onClose: () => void;
 }
 
 export default function SettingsPanel({ onClose }: SettingsPanelProps) {
-  const { settings, updateSettings, isSaving, effectiveTheme } = useSettings();
-
-  const themeOptions: { value: Theme; label: string; icon: React.ElementType }[] = [
-    { value: 'light', label: 'Light', icon: Sun },
-    { value: 'dark', label: 'Dark', icon: Moon },
-    { value: 'system', label: 'System', icon: Monitor },
-  ];
+  const { settings, updateSettings, isSaving } = useSettings();
 
   const notificationSettings = [
     {
@@ -97,37 +87,13 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
             <h3 className="text-[10px] font-black text-foreground/60 uppercase tracking-[0.2em] mb-4">
               Appearance
             </h3>
-            <div className="grid grid-cols-3 gap-2">
-              {themeOptions.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => updateSettings({ theme: option.value })}
-                  className={cn(
-                    "flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all",
-                    settings.theme === option.value
-                      ? "border-primary bg-primary/10"
-                      : "border-border hover:border-primary/50 hover:bg-secondary/10"
-                  )}
-                >
-                  <option.icon className={cn(
-                    "w-5 h-5",
-                    settings.theme === option.value ? "text-primary" : "text-foreground/60"
-                  )} />
-                  <span className={cn(
-                    "text-xs font-bold",
-                    settings.theme === option.value ? "text-primary" : "text-foreground/70"
-                  )}>
-                    {option.label}
-                  </span>
-                  {settings.theme === option.value && (
-                    <Check className="w-3 h-3 text-primary" />
-                  )}
-                </button>
-              ))}
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/10 border-2 border-primary">
+              <Sun className="w-5 h-5 text-primary" />
+              <div>
+                <span className="text-sm font-bold text-primary">Light Mode</span>
+                <p className="text-[10px] text-foreground/60">The app uses light theme</p>
+              </div>
             </div>
-            <p className="text-[10px] text-foreground/50 mt-2 text-center">
-              Current: {effectiveTheme === 'dark' ? 'Dark mode' : 'Light mode'}
-            </p>
           </section>
 
           {/* Notifications Section */}

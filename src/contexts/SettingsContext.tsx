@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback, ReactNode 
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@/contexts/AuthContext';
 
-export type Theme = 'light' | 'dark' | 'system';
+export type Theme = 'light';
 
 export interface UserSettings {
   theme: Theme;
@@ -27,7 +27,7 @@ interface SettingsContextType {
   isLoading: boolean;
   isSaving: boolean;
   updateSettings: (updates: Partial<UserSettings>) => Promise<void>;
-  effectiveTheme: 'light' | 'dark';
+  effectiveTheme: 'light';
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -40,11 +40,6 @@ export function useSettings() {
   return context;
 }
 
-function getSystemTheme(): 'light' | 'dark' {
-  if (typeof window === 'undefined') return 'light';
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
-
 interface SettingsProviderProps {
   children: ReactNode;
   user?: User | null;
@@ -54,30 +49,14 @@ export function SettingsProvider({ children, user }: SettingsProviderProps) {
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(getSystemTheme);
 
-  // Calculate effective theme
-  const effectiveTheme = settings.theme === 'system' ? systemTheme : settings.theme;
+  // Always light theme
+  const effectiveTheme: 'light' = 'light';
 
-  // Apply theme to document
+  // Ensure light theme is always applied
   useEffect(() => {
     const root = document.documentElement;
-    if (effectiveTheme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  }, [effectiveTheme]);
-
-  // Listen for system theme changes
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = (e: MediaQueryListEvent) => {
-      setSystemTheme(e.matches ? 'dark' : 'light');
-    };
-    
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
+    root.classList.remove('dark');
   }, []);
 
   // Fetch settings on user change
@@ -100,7 +79,7 @@ export function SettingsProvider({ children, user }: SettingsProviderProps) {
 
         if (data) {
           setSettings({
-            theme: (data.theme as Theme) || 'system',
+            theme: 'light', // Always light theme
             notifications_notices: data.notifications_notices ?? true,
             notifications_messages: data.notifications_messages ?? true,
             notifications_reminders: data.notifications_reminders ?? true,
