@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import {
   GraduationCap,
   TrendingUp,
@@ -9,6 +9,16 @@ import {
   Award,
   Brain,
   Target,
+  Rocket,
+  Trophy,
+  Compass,
+  PenTool,
+  Microscope,
+  Calculator,
+  Globe,
+  Music,
+  Palette,
+  Code,
   LucideIcon
 } from "lucide-react";
 
@@ -17,7 +27,7 @@ interface FloatingIcon {
   Icon: LucideIcon;
   baseTop: number;
   baseLeft: number;
-  size: "sm" | "md" | "lg";
+  size: "xs" | "sm" | "md" | "lg";
   shape: "square" | "circle";
   gradient: string;
   glowColor: string;
@@ -115,7 +125,7 @@ const iconConfigs: Omit<FloatingIcon, "baseTop" | "baseLeft">[] = [
   {
     id: "target",
     Icon: Target,
-    size: "sm",
+    size: "xs",
     shape: "circle",
     gradient: "from-violet-400 via-purple-500 to-violet-600",
     glowColor: "bg-violet-500/40",
@@ -123,29 +133,169 @@ const iconConfigs: Omit<FloatingIcon, "baseTop" | "baseLeft">[] = [
     parallaxIntensity: 1.4,
     animationDuration: 4.8,
     animationDelay: 1.5
+  },
+  {
+    id: "rocket",
+    Icon: Rocket,
+    size: "md",
+    shape: "circle",
+    gradient: "from-orange-400 via-red-500 to-orange-600",
+    glowColor: "bg-orange-500/40",
+    borderColor: "border-orange-300/40",
+    parallaxIntensity: 1.3,
+    animationDuration: 5.8,
+    animationDelay: 0.3
+  },
+  {
+    id: "trophy",
+    Icon: Trophy,
+    size: "sm",
+    shape: "square",
+    gradient: "from-yellow-400 via-amber-500 to-yellow-600",
+    glowColor: "bg-yellow-500/40",
+    borderColor: "border-yellow-300/40",
+    parallaxIntensity: 1.0,
+    animationDuration: 5.3,
+    animationDelay: 2.0
+  },
+  {
+    id: "compass",
+    Icon: Compass,
+    size: "xs",
+    shape: "circle",
+    gradient: "from-teal-400 via-cyan-500 to-teal-600",
+    glowColor: "bg-teal-400/40",
+    borderColor: "border-teal-300/40",
+    parallaxIntensity: 1.2,
+    animationDuration: 6.2,
+    animationDelay: 1.0
+  },
+  {
+    id: "pen",
+    Icon: PenTool,
+    size: "xs",
+    shape: "square",
+    gradient: "from-pink-400 via-fuchsia-500 to-pink-600",
+    glowColor: "bg-pink-500/40",
+    borderColor: "border-pink-300/40",
+    parallaxIntensity: 1.5,
+    animationDuration: 4.2,
+    animationDelay: 0.9
+  },
+  {
+    id: "microscope",
+    Icon: Microscope,
+    size: "sm",
+    shape: "square",
+    gradient: "from-lime-400 via-green-500 to-lime-600",
+    glowColor: "bg-lime-500/40",
+    borderColor: "border-lime-300/40",
+    parallaxIntensity: 0.95,
+    animationDuration: 5.7,
+    animationDelay: 1.4
+  },
+  {
+    id: "calculator",
+    Icon: Calculator,
+    size: "xs",
+    shape: "square",
+    gradient: "from-slate-400 via-gray-500 to-slate-600",
+    glowColor: "bg-slate-400/40",
+    borderColor: "border-slate-300/40",
+    parallaxIntensity: 1.1,
+    animationDuration: 6.0,
+    animationDelay: 2.5
+  },
+  {
+    id: "globe",
+    Icon: Globe,
+    size: "md",
+    shape: "circle",
+    gradient: "from-sky-400 via-blue-500 to-sky-600",
+    glowColor: "bg-sky-500/40",
+    borderColor: "border-sky-300/40",
+    parallaxIntensity: 0.85,
+    animationDuration: 7,
+    animationDelay: 0.5
+  },
+  {
+    id: "music",
+    Icon: Music,
+    size: "xs",
+    shape: "circle",
+    gradient: "from-fuchsia-400 via-purple-500 to-fuchsia-600",
+    glowColor: "bg-fuchsia-500/40",
+    borderColor: "border-fuchsia-300/40",
+    parallaxIntensity: 1.35,
+    animationDuration: 4.6,
+    animationDelay: 1.7
+  },
+  {
+    id: "palette",
+    Icon: Palette,
+    size: "sm",
+    shape: "square",
+    gradient: "from-red-400 via-rose-500 to-red-600",
+    glowColor: "bg-red-500/40",
+    borderColor: "border-red-300/40",
+    parallaxIntensity: 1.15,
+    animationDuration: 5.4,
+    animationDelay: 2.3
+  },
+  {
+    id: "code",
+    Icon: Code,
+    size: "sm",
+    shape: "square",
+    gradient: "from-emerald-400 via-green-500 to-emerald-600",
+    glowColor: "bg-emerald-500/40",
+    borderColor: "border-emerald-300/40",
+    parallaxIntensity: 1.25,
+    animationDuration: 5.1,
+    animationDelay: 0.7
   }
 ];
 
-// Position zones to ensure good distribution
+// Position zones to ensure good distribution - expanded for more icons
 const positionZones = [
-  { top: [12, 22], left: [20, 35] },   // top-left
-  { top: [10, 20], left: [45, 58] },   // top-center
-  { top: [18, 28], left: [65, 82] },   // top-right
-  { top: [35, 50], left: [28, 42] },   // mid-left
-  { top: [55, 68], left: [15, 28] },   // bottom-left
-  { top: [55, 68], left: [68, 82] },   // bottom-right
-  { top: [32, 45], left: [75, 88] },   // mid-right
-  { top: [70, 82], left: [42, 55] },   // bottom-center
+  { top: [8, 18], left: [8, 20] },      // top-left corner
+  { top: [12, 22], left: [25, 38] },    // top-left
+  { top: [8, 16], left: [42, 55] },     // top-center
+  { top: [10, 20], left: [58, 72] },    // top-right
+  { top: [8, 18], left: [78, 92] },     // top-right corner
+  { top: [28, 40], left: [8, 22] },     // mid-left
+  { top: [35, 48], left: [30, 45] },    // center-left
+  { top: [38, 50], left: [55, 70] },    // center-right
+  { top: [28, 40], left: [78, 92] },    // mid-right
+  { top: [52, 65], left: [8, 22] },     // lower-left
+  { top: [55, 68], left: [28, 42] },    // lower-center-left
+  { top: [55, 68], left: [58, 72] },    // lower-center-right
+  { top: [52, 65], left: [78, 92] },    // lower-right
+  { top: [72, 85], left: [12, 28] },    // bottom-left
+  { top: [72, 85], left: [35, 50] },    // bottom-center-left
+  { top: [72, 85], left: [52, 68] },    // bottom-center-right
+  { top: [72, 85], left: [72, 88] },    // bottom-right
+  { top: [45, 58], left: [45, 58] },    // true center
 ];
 
-function generateRandomPositions(): { top: number; left: number }[] {
-  return positionZones.map(zone => ({
-    top: zone.top[0] + Math.random() * (zone.top[1] - zone.top[0]),
-    left: zone.left[0] + Math.random() * (zone.left[1] - zone.left[0])
-  }));
+function generateRandomPositions(count: number): { top: number; left: number }[] {
+  const positions: { top: number; left: number }[] = [];
+  for (let i = 0; i < count; i++) {
+    const zone = positionZones[i % positionZones.length];
+    positions.push({
+      top: zone.top[0] + Math.random() * (zone.top[1] - zone.top[0]),
+      left: zone.left[0] + Math.random() * (zone.left[1] - zone.left[0])
+    });
+  }
+  return positions;
 }
 
 const sizeClasses = {
+  xs: {
+    container: "w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12",
+    icon: "w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6",
+    rounded: { square: "rounded-lg md:rounded-xl", circle: "rounded-full" }
+  },
   sm: {
     container: "w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16",
     icon: "w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8",
@@ -157,8 +307,8 @@ const sizeClasses = {
     rounded: { square: "rounded-xl md:rounded-2xl", circle: "rounded-full" }
   },
   lg: {
-    container: "w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32",
-    icon: "w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16",
+    container: "w-18 h-18 md:w-24 md:h-24 lg:w-28 lg:h-28",
+    icon: "w-9 h-9 md:w-12 md:h-12 lg:w-14 lg:h-14",
     rounded: { square: "rounded-2xl md:rounded-3xl", circle: "rounded-full" }
   }
 };
@@ -169,7 +319,7 @@ interface FloatingIconProps {
   mouseY: any;
 }
 
-function FloatingIcon({ config, mouseX, mouseY }: FloatingIconProps) {
+function FloatingIconItem({ config, mouseX, mouseY }: FloatingIconProps) {
   const { Icon, size, shape, gradient, glowColor, borderColor, parallaxIntensity, animationDuration, animationDelay, baseTop, baseLeft } = config;
   
   const sizeConfig = sizeClasses[size];
@@ -222,7 +372,7 @@ export function FloatingIconsContainer() {
   const mouseY = useMotionValue(0);
   
   // Generate random positions once on mount
-  const randomPositions = useMemo(() => generateRandomPositions(), []);
+  const randomPositions = useMemo(() => generateRandomPositions(iconConfigs.length), []);
   
   const icons: FloatingIcon[] = useMemo(() => 
     iconConfigs.map((config, index) => ({
@@ -259,13 +409,14 @@ export function FloatingIconsContainer() {
       className="relative mx-auto max-w-5xl aspect-[16/9] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-bloom bg-gradient-to-br from-[#1A1B23] via-[#252836] to-[#1A1B23] border border-purple-500/20"
     >
       {/* Ambient glow effects */}
-      <div className="absolute top-1/4 left-1/4 w-48 h-48 md:w-64 md:h-64 bg-purple-500/20 rounded-full blur-[80px] animate-pulse" />
-      <div className="absolute bottom-1/3 right-1/3 w-40 h-40 md:w-56 md:h-56 bg-purple-600/15 rounded-full blur-[60px]" />
+      <div className="absolute top-1/4 left-1/4 w-48 h-48 md:w-64 md:h-64 bg-purple-500/15 rounded-full blur-[100px]" />
+      <div className="absolute bottom-1/4 right-1/4 w-40 h-40 md:w-56 md:h-56 bg-blue-600/10 rounded-full blur-[80px]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 md:w-48 md:h-48 bg-purple-500/10 rounded-full blur-[60px]" />
       
       {/* Floating Icons */}
       <div className="absolute inset-0">
         {icons.map((icon) => (
-          <FloatingIcon
+          <FloatingIconItem
             key={icon.id}
             config={icon}
             mouseX={mouseX}
@@ -273,79 +424,18 @@ export function FloatingIconsContainer() {
           />
         ))}
         
-        {/* Central Orb with Pulsing Rings */}
-        <div className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2">
-          {/* Outer pulsing ring 3 */}
-          <motion.div
-            animate={{
-              scale: [1, 1.6, 1],
-              opacity: [0.1, 0.3, 0.1]
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 0.8
-            }}
-            className="absolute inset-0 w-32 h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 rounded-full border border-purple-400/20 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
-          />
-          
-          {/* Outer pulsing ring 2 */}
-          <motion.div
-            animate={{
-              scale: [1, 1.4, 1],
-              opacity: [0.15, 0.4, 0.15]
-            }}
-            transition={{
-              duration: 3.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 0.4
-            }}
-            className="absolute inset-0 w-28 h-28 md:w-44 md:h-44 lg:w-52 lg:h-52 rounded-full border border-purple-500/25 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
-          />
-          
-          {/* Outer pulsing ring 1 */}
-          <motion.div
-            animate={{
-              scale: [1, 1.25, 1],
-              opacity: [0.2, 0.5, 0.2]
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="absolute inset-0 w-24 h-24 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full border-2 border-purple-500/30 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
-          />
-          
-          {/* Central orb */}
-          <motion.div 
-            animate={{ 
-              scale: [1, 1.08, 1],
-              opacity: [0.6, 0.85, 0.6]
-            }}
-            transition={{ 
-              duration: 5, 
-              repeat: Infinity, 
-              ease: "easeInOut" 
-            }}
-            className="relative"
-          >
-            <div className="w-20 h-20 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full bg-gradient-to-br from-purple-600/40 via-purple-500/30 to-purple-800/50 backdrop-blur-sm border border-purple-400/30 shadow-[inset_0_0_40px_rgba(147,51,234,0.4),0_0_60px_rgba(147,51,234,0.2)]" />
-          </motion.div>
-        </div>
-        
         {/* Floating particles */}
         {[
-          { top: 60, left: 12, size: 3, color: "purple", duration: 7, delay: 0 },
-          { top: 28, left: 88, size: 2, color: "emerald", duration: 5, delay: 1 },
-          { top: 82, left: 35, size: 2.5, color: "amber", duration: 6, delay: 2 },
-          { top: 15, left: 12, size: 2, color: "blue", duration: 5.5, delay: 0.8 },
-          { top: 52, left: 92, size: 2.5, color: "rose", duration: 6.5, delay: 1.5 },
-          { top: 85, left: 8, size: 2, color: "cyan", duration: 4.5, delay: 2.5 },
-          { top: 45, left: 5, size: 2, color: "yellow", duration: 5.8, delay: 1.2 },
-          { top: 75, left: 88, size: 2.5, color: "violet", duration: 6.2, delay: 0.5 },
+          { top: 60, left: 5, size: 3, color: "bg-purple-400/50", duration: 7, delay: 0 },
+          { top: 28, left: 95, size: 2, color: "bg-emerald-400/50", duration: 5, delay: 1 },
+          { top: 88, left: 35, size: 2.5, color: "bg-amber-400/50", duration: 6, delay: 2 },
+          { top: 12, left: 5, size: 2, color: "bg-blue-400/50", duration: 5.5, delay: 0.8 },
+          { top: 48, left: 95, size: 2.5, color: "bg-rose-400/50", duration: 6.5, delay: 1.5 },
+          { top: 90, left: 5, size: 2, color: "bg-cyan-400/50", duration: 4.5, delay: 2.5 },
+          { top: 35, left: 3, size: 2, color: "bg-yellow-400/50", duration: 5.8, delay: 1.2 },
+          { top: 78, left: 95, size: 2.5, color: "bg-violet-400/50", duration: 6.2, delay: 0.5 },
+          { top: 5, left: 50, size: 2, color: "bg-pink-400/50", duration: 5.2, delay: 1.8 },
+          { top: 95, left: 60, size: 2.5, color: "bg-teal-400/50", duration: 6.8, delay: 0.3 },
         ].map((particle, i) => (
           <motion.div
             key={i}
@@ -359,7 +449,7 @@ export function FloatingIconsContainer() {
               ease: "easeInOut",
               delay: particle.delay
             }}
-            className={`absolute rounded-full bg-${particle.color}-400/50`}
+            className={`absolute rounded-full ${particle.color}`}
             style={{
               top: `${particle.top}%`,
               left: `${particle.left}%`,
