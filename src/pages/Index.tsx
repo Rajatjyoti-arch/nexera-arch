@@ -19,7 +19,13 @@ import {
   Github,
   Linkedin,
   ChevronRight,
-  Play
+  Play,
+  BookOpen,
+  Lightbulb,
+  Award,
+  PenTool,
+  Brain,
+  Target
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -252,6 +258,123 @@ export default function Index() {
                     </div>
                   </motion.div>
 
+                  {/* Book Icon - Blue/Indigo */}
+                  <motion.div 
+                    animate={{ 
+                      y: [0, -18, 0], 
+                      x: [0, -5, 0],
+                      rotate: [0, -6, 3, 0]
+                    }}
+                    transition={{ 
+                      duration: 5.5, 
+                      repeat: Infinity, 
+                      ease: "easeInOut", 
+                      delay: 1.2 
+                    }}
+                    className="absolute top-[58%] right-[18%] md:right-[20%]"
+                  >
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-blue-500/40 rounded-xl md:rounded-2xl blur-lg scale-110" />
+                      <div className="relative w-14 h-14 md:w-18 md:h-18 lg:w-20 lg:h-20 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-400 via-indigo-500 to-blue-600 shadow-2xl flex items-center justify-center border border-blue-300/40">
+                        <BookOpen className="w-7 h-7 md:w-9 md:h-9 lg:w-10 lg:h-10 text-white drop-shadow-md" strokeWidth={1.5} />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Lightbulb Icon - Yellow/Gold */}
+                  <motion.div 
+                    animate={{ 
+                      y: [0, -14, 0], 
+                      x: [0, 8, 0],
+                      scale: [1, 1.08, 1],
+                      rotate: [0, 5, -3, 0]
+                    }}
+                    transition={{ 
+                      duration: 4, 
+                      repeat: Infinity, 
+                      ease: "easeInOut", 
+                      delay: 0.6 
+                    }}
+                    className="absolute top-[12%] left-[48%] md:left-[52%]"
+                  >
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-yellow-400/50 rounded-full blur-lg scale-125" />
+                      <div className="relative w-11 h-11 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-full bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 shadow-2xl flex items-center justify-center border border-yellow-200/50">
+                        <Lightbulb className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8 text-white drop-shadow-md" strokeWidth={2} />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Award/Certificate Icon - Rose/Pink */}
+                  <motion.div 
+                    animate={{ 
+                      y: [0, -16, 0], 
+                      x: [0, -6, 0],
+                      rotate: [0, 4, -6, 0]
+                    }}
+                    transition={{ 
+                      duration: 5.2, 
+                      repeat: Infinity, 
+                      ease: "easeInOut", 
+                      delay: 1.8 
+                    }}
+                    className="absolute top-[68%] left-[18%] md:left-[22%]"
+                  >
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-rose-500/40 rounded-xl blur-lg scale-110" />
+                      <div className="relative w-12 h-12 md:w-16 md:h-16 lg:w-18 lg:h-18 rounded-xl bg-gradient-to-br from-rose-400 via-pink-500 to-rose-600 shadow-2xl flex items-center justify-center border border-rose-300/40">
+                        <Award className="w-6 h-6 md:w-8 md:h-8 lg:w-9 lg:h-9 text-white drop-shadow-md" strokeWidth={1.5} />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Brain Icon - Cyan/Sky */}
+                  <motion.div 
+                    animate={{ 
+                      y: [0, -12, 0], 
+                      x: [0, 10, 0],
+                      rotate: [0, -4, 6, 0],
+                      scale: [1, 1.04, 0.98, 1]
+                    }}
+                    transition={{ 
+                      duration: 6.5, 
+                      repeat: Infinity, 
+                      ease: "easeInOut", 
+                      delay: 2.2 
+                    }}
+                    className="absolute top-[38%] right-[8%] md:right-[12%]"
+                  >
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-cyan-400/40 rounded-2xl blur-lg scale-110" />
+                      <div className="relative w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-2xl bg-gradient-to-br from-cyan-400 via-sky-500 to-cyan-600 shadow-2xl flex items-center justify-center border border-cyan-300/40">
+                        <Brain className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8 text-white drop-shadow-md" strokeWidth={1.5} />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Target Icon - Violet */}
+                  <motion.div 
+                    animate={{ 
+                      y: [0, -10, 0], 
+                      x: [0, -8, 0],
+                      rotate: [0, 8, -4, 0]
+                    }}
+                    transition={{ 
+                      duration: 4.8, 
+                      repeat: Infinity, 
+                      ease: "easeInOut", 
+                      delay: 1.5 
+                    }}
+                    className="absolute top-[75%] left-[45%] md:left-[48%]"
+                  >
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-violet-500/40 rounded-full blur-lg scale-110" />
+                      <div className="relative w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full bg-gradient-to-br from-violet-400 via-purple-500 to-violet-600 shadow-2xl flex items-center justify-center border border-violet-300/40">
+                        <Target className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white drop-shadow-md" strokeWidth={2} />
+                      </div>
+                    </div>
+                  </motion.div>
+
                   {/* Central Orb - Translucent Purple */}
                   <motion.div 
                     animate={{ 
@@ -275,7 +398,7 @@ export default function Index() {
                       opacity: [0.3, 0.7, 0.3]
                     }}
                     transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-[60%] left-[20%] w-3 h-3 rounded-full bg-purple-400/60"
+                    className="absolute top-[60%] left-[12%] w-3 h-3 rounded-full bg-purple-400/60"
                   />
                   <motion.div
                     animate={{ 
@@ -283,7 +406,7 @@ export default function Index() {
                       opacity: [0.4, 0.8, 0.4]
                     }}
                     transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                    className="absolute top-[35%] right-[15%] w-2 h-2 rounded-full bg-emerald-400/60"
+                    className="absolute top-[28%] right-[8%] w-2 h-2 rounded-full bg-emerald-400/60"
                   />
                   <motion.div
                     animate={{ 
@@ -291,7 +414,31 @@ export default function Index() {
                       opacity: [0.3, 0.6, 0.3]
                     }}
                     transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                    className="absolute top-[70%] right-[40%] w-2.5 h-2.5 rounded-full bg-amber-400/50"
+                    className="absolute top-[82%] right-[35%] w-2.5 h-2.5 rounded-full bg-amber-400/50"
+                  />
+                  <motion.div
+                    animate={{ 
+                      y: [0, -18, 0],
+                      opacity: [0.35, 0.65, 0.35]
+                    }}
+                    transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+                    className="absolute top-[15%] left-[12%] w-2 h-2 rounded-full bg-blue-400/50"
+                  />
+                  <motion.div
+                    animate={{ 
+                      y: [0, -22, 0],
+                      opacity: [0.25, 0.55, 0.25]
+                    }}
+                    transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+                    className="absolute top-[52%] right-[5%] w-2.5 h-2.5 rounded-full bg-rose-400/50"
+                  />
+                  <motion.div
+                    animate={{ 
+                      y: [0, -15, 0],
+                      opacity: [0.3, 0.7, 0.3]
+                    }}
+                    transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
+                    className="absolute top-[85%] left-[8%] w-2 h-2 rounded-full bg-cyan-400/50"
                   />
                 </div>
               </div>
