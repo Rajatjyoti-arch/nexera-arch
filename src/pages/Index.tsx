@@ -58,7 +58,10 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-hidden relative">
+      {/* Full Background Floating Icons */}
+      <FloatingIconsContainer />
+      
       {/* Sticky Navigation */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50">
         <div className="container mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
@@ -163,16 +166,6 @@ export default function Index() {
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </motion.div>
-          </motion.div>
-
-          {/* Hero 3D Image Container with Floating Icons */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-16 md:mt-24 relative"
-          >
-            <FloatingIconsContainer />
           </motion.div>
         </div>
       </section>
