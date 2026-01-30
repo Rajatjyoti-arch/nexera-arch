@@ -269,13 +269,14 @@ function FloatingIconItem({ config, mouseX, mouseY }: FloatingIconProps) {
         ease: "easeInOut",
         delay: animationDelay
       }}
-      className="absolute backdrop-blur-sm"
+      className="absolute"
     >
-      <div className="relative">
-        {/* Glow effect with blur */}
-        <div className={`absolute inset-0 ${glowColor} ${roundedClass} blur-xl scale-125`} />
-        <div className={`relative ${sizeConfig.container} ${roundedClass} bg-gradient-to-br ${gradient} shadow-2xl flex items-center justify-center border ${borderColor} backdrop-blur-md bg-opacity-80`}>
-          <Icon className={`${sizeConfig.icon} text-white drop-shadow-lg`} strokeWidth={size === "lg" ? 1.5 : 2} />
+      <div className="relative" style={{ filter: 'blur(1.5px)' }}>
+        {/* Enhanced glow effect with stronger blur */}
+        <div className={`absolute inset-0 ${glowColor} ${roundedClass} blur-2xl scale-150 opacity-60`} />
+        <div className={`absolute inset-0 ${glowColor} ${roundedClass} blur-3xl scale-[2] opacity-30`} />
+        <div className={`relative ${sizeConfig.container} ${roundedClass} bg-gradient-to-br ${gradient} shadow-2xl flex items-center justify-center border ${borderColor} opacity-70`}>
+          <Icon className={`${sizeConfig.icon} text-white/90 drop-shadow-lg`} strokeWidth={size === "lg" ? 1.5 : 2} />
         </div>
       </div>
     </motion.div>
@@ -324,16 +325,18 @@ export function FloatingIconsContainer() {
       ref={containerRef}
       className="absolute inset-0 overflow-hidden pointer-events-none"
     >
-      {/* Subtle blur overlay for depth */}
-      <div className="absolute inset-0 backdrop-blur-[1px]" />
+      {/* Gradient overlay for blending */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background opacity-40" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background opacity-30" />
       
-      {/* Ambient glow effects */}
-      <div className="absolute top-1/4 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-purple-500/10 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/4 right-1/4 w-56 h-56 md:w-80 md:h-80 bg-blue-600/8 rounded-full blur-[100px]" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 md:w-72 md:h-72 bg-purple-500/5 rounded-full blur-[80px]" />
+      {/* Enhanced ambient glow effects */}
+      <div className="absolute top-1/4 left-1/4 w-72 h-72 md:w-[28rem] md:h-[28rem] bg-purple-500/8 rounded-full blur-[150px]" />
+      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 md:w-96 md:h-96 bg-blue-600/6 rounded-full blur-[130px]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 md:w-80 md:h-80 bg-lavender-soft/10 rounded-full blur-[100px]" />
+      <div className="absolute top-1/3 right-1/3 w-48 h-48 md:w-64 md:h-64 bg-pink-500/5 rounded-full blur-[120px]" />
       
-      {/* Floating Icons */}
-      <div className="absolute inset-0">
+      {/* Floating Icons with dreamy effect */}
+      <div className="absolute inset-0" style={{ filter: 'blur(0.5px)' }}>
         {icons.map((icon) => (
           <FloatingIconItem
             key={icon.id}
@@ -343,6 +346,11 @@ export function FloatingIconsContainer() {
           />
         ))}
       </div>
+      
+      {/* Top gradient fade for seamless blend with header */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-background to-transparent" />
+      {/* Bottom gradient fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
     </div>
   );
 }
