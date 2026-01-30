@@ -164,50 +164,134 @@ export default function Index() {
             </motion.div>
           </motion.div>
 
-          {/* Hero 3D Image Container */}
+          {/* Hero 3D Image Container - Dark Navy with Floating Icons */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="mt-16 md:mt-24 relative"
           >
-            <div className="relative mx-auto max-w-5xl aspect-[16/9] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-bloom bg-gradient-to-br from-purple-100 via-lavender-soft to-pink-100 dark:from-purple-950/30 dark:via-primary/10 dark:to-pink-950/30 border border-border">
-              {/* 3D Coins/Elements Floating */}
+            <div className="relative mx-auto max-w-5xl aspect-[16/9] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-bloom bg-gradient-to-br from-[#1A1B23] via-[#252836] to-[#1A1B23] border border-purple-500/20">
+              {/* Ambient glow effects */}
+              <div className="absolute top-1/4 left-1/4 w-48 h-48 md:w-64 md:h-64 bg-purple-500/20 rounded-full blur-[80px] animate-pulse" />
+              <div className="absolute bottom-1/3 right-1/3 w-40 h-40 md:w-56 md:h-56 bg-purple-600/15 rounded-full blur-[60px]" />
+              
+              {/* Floating 3D Elements Container */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="relative w-full h-full">
-                  {/* Floating 3D Elements */}
+                  
+                  {/* Graduation Cap Icon - Purple with glow */}
                   <motion.div 
-                    animate={{ y: [0, -15, 0], rotate: [0, 5, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-1/4 left-1/4 w-20 h-20 md:w-32 md:h-32 rounded-2xl bg-gradient-to-br from-primary to-purple-600 shadow-glow-lg flex items-center justify-center"
+                    animate={{ 
+                      y: [0, -20, 0], 
+                      x: [0, 8, 0],
+                      rotate: [0, 3, -2, 0],
+                      scale: [1, 1.02, 1]
+                    }}
+                    transition={{ 
+                      duration: 6, 
+                      repeat: Infinity, 
+                      ease: "easeInOut",
+                      times: [0, 0.5, 1]
+                    }}
+                    className="absolute top-[18%] left-[22%] md:left-[28%]"
                   >
-                    <GraduationCap className="w-10 h-10 md:w-16 md:h-16 text-white" />
+                    <div className="relative">
+                      {/* Glow effect */}
+                      <div className="absolute inset-0 bg-purple-500/50 rounded-2xl md:rounded-3xl blur-xl scale-110" />
+                      <div className="relative w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-2xl md:rounded-3xl bg-gradient-to-br from-purple-500 via-purple-600 to-purple-700 shadow-2xl flex items-center justify-center border border-purple-400/30">
+                        <GraduationCap className="w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 text-white drop-shadow-lg" strokeWidth={1.5} />
+                      </div>
+                    </div>
                   </motion.div>
                   
+                  {/* Trending Up Icon - Teal/Emerald circle */}
                   <motion.div 
-                    animate={{ y: [0, -20, 0], rotate: [0, -5, 0] }}
-                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                    className="absolute top-1/3 right-1/4 w-16 h-16 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 shadow-soft-lg flex items-center justify-center"
+                    animate={{ 
+                      y: [0, -15, 0], 
+                      x: [0, -10, 0],
+                      rotate: [0, -5, 5, 0]
+                    }}
+                    transition={{ 
+                      duration: 5, 
+                      repeat: Infinity, 
+                      ease: "easeInOut", 
+                      delay: 0.8 
+                    }}
+                    className="absolute top-[22%] right-[18%] md:right-[22%]"
                   >
-                    <TrendingUp className="w-8 h-8 md:w-12 md:h-12 text-white" />
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-emerald-400/40 rounded-full blur-lg scale-110" />
+                      <div className="relative w-14 h-14 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 shadow-2xl flex items-center justify-center border border-emerald-300/40">
+                        <TrendingUp className="w-7 h-7 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white drop-shadow-md" strokeWidth={2} />
+                      </div>
+                    </div>
                   </motion.div>
                   
+                  {/* Sparkles Icon - Orange/Amber */}
                   <motion.div 
-                    animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
-                    transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                    className="absolute bottom-1/3 left-1/3 w-14 h-14 md:w-20 md:h-20 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-soft-lg flex items-center justify-center"
+                    animate={{ 
+                      y: [0, -12, 0], 
+                      x: [0, 6, 0],
+                      rotate: [0, 8, -4, 0],
+                      scale: [1, 1.05, 0.98, 1]
+                    }}
+                    transition={{ 
+                      duration: 4.5, 
+                      repeat: Infinity, 
+                      ease: "easeInOut", 
+                      delay: 0.4 
+                    }}
+                    className="absolute top-[48%] left-[32%] md:left-[36%]"
                   >
-                    <Sparkles className="w-7 h-7 md:w-10 md:h-10 text-white" />
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-amber-500/40 rounded-xl md:rounded-2xl blur-lg scale-110" />
+                      <div className="relative w-12 h-12 md:w-16 md:h-16 lg:w-18 lg:h-18 rounded-xl md:rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 shadow-2xl flex items-center justify-center border border-amber-300/40">
+                        <Sparkles className="w-6 h-6 md:w-8 md:h-8 lg:w-9 lg:h-9 text-white drop-shadow-md" strokeWidth={2} />
+                      </div>
+                    </div>
                   </motion.div>
 
-                  {/* Decorative Flowers/Flora */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-purple-200/60 via-transparent to-transparent dark:from-purple-900/40" />
-                  
-                  {/* Central Orb */}
+                  {/* Central Orb - Translucent Purple */}
                   <motion.div 
-                    animate={{ scale: [1, 1.05, 1] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 md:w-48 md:h-48 rounded-full bg-gradient-to-br from-primary/30 via-purple-400/20 to-pink-400/30 backdrop-blur-sm border border-white/30"
+                    animate={{ 
+                      scale: [1, 1.08, 1],
+                      opacity: [0.6, 0.8, 0.6]
+                    }}
+                    transition={{ 
+                      duration: 5, 
+                      repeat: Infinity, 
+                      ease: "easeInOut" 
+                    }}
+                    className="absolute top-[45%] right-[28%] md:right-[32%]"
+                  >
+                    <div className="w-28 h-28 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full bg-gradient-to-br from-purple-600/30 via-purple-500/20 to-purple-800/40 backdrop-blur-sm border border-purple-400/20 shadow-[inset_0_0_30px_rgba(147,51,234,0.3)]" />
+                  </motion.div>
+                  
+                  {/* Additional floating particles */}
+                  <motion.div
+                    animate={{ 
+                      y: [0, -30, 0],
+                      opacity: [0.3, 0.7, 0.3]
+                    }}
+                    transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-[60%] left-[20%] w-3 h-3 rounded-full bg-purple-400/60"
+                  />
+                  <motion.div
+                    animate={{ 
+                      y: [0, -20, 0],
+                      opacity: [0.4, 0.8, 0.4]
+                    }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                    className="absolute top-[35%] right-[15%] w-2 h-2 rounded-full bg-emerald-400/60"
+                  />
+                  <motion.div
+                    animate={{ 
+                      y: [0, -25, 0],
+                      opacity: [0.3, 0.6, 0.3]
+                    }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                    className="absolute top-[70%] right-[40%] w-2.5 h-2.5 rounded-full bg-amber-400/50"
                   />
                 </div>
               </div>
