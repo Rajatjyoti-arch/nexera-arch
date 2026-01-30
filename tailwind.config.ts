@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
-
+  darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
@@ -77,6 +77,15 @@ export default {
           DEFAULT: "hsl(var(--admin))",
           foreground: "hsl(var(--admin-foreground))",
         },
+        // BloomFi specific colors
+        navy: {
+          DEFAULT: "hsl(var(--navy))",
+          light: "hsl(var(--navy-light))",
+        },
+        lavender: {
+          DEFAULT: "hsl(var(--lavender))",
+          soft: "hsl(var(--lavender-soft))",
+        },
         online: "hsl(var(--online))",
         offline: "hsl(var(--offline))",
         away: "hsl(var(--away))",
@@ -97,6 +106,7 @@ export default {
         sm: "calc(var(--radius) - 4px)",
         xl: "calc(var(--radius) + 4px)",
         "2xl": "calc(var(--radius) + 8px)",
+        "3xl": "1.5rem",
       },
       keyframes: {
         "accordion-down": {
@@ -127,6 +137,10 @@ export default {
           from: { transform: "scale(0.95)", opacity: "0" },
           to: { transform: "scale(1)", opacity: "1" },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -136,13 +150,15 @@ export default {
         "slide-in-left": "slide-in-left 0.3s ease-out",
         "slide-in-up": "slide-in-up 0.3s ease-out",
         "scale-in": "scale-in 0.2s ease-out",
+        float: "float 3s ease-in-out infinite",
       },
       boxShadow: {
-        "glow": "0 0 40px -10px hsl(var(--primary) / 0.3)",
-        "glow-sm": "0 0 20px -5px hsl(var(--primary) / 0.25)",
-        "glow-lg": "0 0 60px -15px hsl(var(--primary) / 0.35)",
-        "soft": "0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)",
-        "soft-lg": "0 10px 40px -10px rgba(0, 0, 0, 0.1), 0 2px 10px -2px rgba(0, 0, 0, 0.04)",
+        glow: "0 0 40px -10px hsl(var(--primary) / 0.4)",
+        "glow-sm": "0 0 20px -5px hsl(var(--primary) / 0.3)",
+        "glow-lg": "0 0 60px -15px hsl(var(--primary) / 0.5)",
+        soft: "0 2px 20px -3px rgba(0, 0, 0, 0.08), 0 8px 30px -5px rgba(0, 0, 0, 0.05)",
+        "soft-lg": "0 10px 50px -12px rgba(0, 0, 0, 0.12), 0 4px 20px -4px rgba(0, 0, 0, 0.06)",
+        "bloom": "0 20px 60px -20px hsl(var(--primary) / 0.25)",
       },
     },
   },

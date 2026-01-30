@@ -1,30 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* High Contrast Light Mode - Black Text, White Background */
+    /* BloomFi Light Mode - Clean White with Navy Accents */
     --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
+    --foreground: 228 15% 15%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    --card-foreground: 228 15% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
-    --primary: 262 90% 55%;
+    --popover-foreground: 228 15% 15%;
+    --primary: 262 80% 60%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 20%;
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 0%;
+    --secondary: 240 10% 97%;
+    --secondary-foreground: 228 15% 15%;
+    --muted: 240 10% 96%;
+    --muted-foreground: 228 10% 45%;
+    --accent: 262 60% 95%;
+    --accent-foreground: 262 80% 45%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 80%;
-    --input: 0 0% 80%;
-    --ring: 262 90% 55%;
+    --border: 240 10% 90%;
+    --input: 240 10% 90%;
+    --ring: 262 80% 60%;
     --radius: 1rem;
+
+    /* BloomFi specific tokens */
+    --navy: 228 20% 12%;
+    --navy-light: 228 15% 18%;
+    --lavender: 262 80% 65%;
+    --lavender-soft: 262 60% 92%;
+    --bloom-gradient: linear-gradient(135deg, hsl(262 80% 60%) 0%, hsl(280 70% 55%) 100%);
 
     --student: 262 90% 55%;
     --faculty: 199 95% 45%;
@@ -44,35 +53,38 @@
   }
 
   .dark {
-    /* Dark Mode */
-    --background: 240 10% 4%;
+    /* Dark Mode with BloomFi palette */
+    --background: 228 20% 7%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 6%;
+    --card: 228 18% 10%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 6%;
+    --popover: 228 18% 10%;
     --popover-foreground: 0 0% 98%;
-    --primary: 262 90% 60%;
+    --primary: 262 80% 65%;
     --primary-foreground: 0 0% 0%;
-    --secondary: 240 5% 15%;
+    --secondary: 228 15% 15%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 5% 15%;
+    --muted: 228 15% 15%;
     --muted-foreground: 0 0% 65%;
-    --accent: 240 5% 15%;
+    --accent: 228 15% 18%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 240 5% 20%;
-    --input: 240 5% 20%;
-    --ring: 262 90% 60%;
+    --border: 228 15% 20%;
+    --input: 228 15% 20%;
+    --ring: 262 80% 65%;
 
-    --sidebar-background: 240 10% 6%;
+    --navy: 228 20% 12%;
+    --navy-light: 228 15% 18%;
+
+    --sidebar-background: 228 18% 10%;
     --sidebar-foreground: 0 0% 85%;
     --sidebar-primary: 0 0% 98%;
-    --sidebar-primary-foreground: 240 5.9% 10%;
-    --sidebar-accent: 240 5% 15%;
+    --sidebar-primary-foreground: 228 15% 10%;
+    --sidebar-accent: 228 15% 15%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 5% 20%;
-    --sidebar-ring: 262 90% 60%;
+    --sidebar-border: 228 15% 20%;
+    --sidebar-ring: 262 80% 65%;
   }
 
   * {
@@ -80,7 +92,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased selection:bg-violet-500/30;
+    @apply bg-background text-foreground font-sans antialiased selection:bg-primary/20;
     position: relative;
     overflow-x: hidden;
   }
@@ -95,22 +107,53 @@
   }
 }
 
-
 @layer components {
+  /* BloomFi Glass Effects */
   .glass {
-    @apply bg-background/60 backdrop-blur-xl border border-border/50;
+    @apply bg-background/80 backdrop-blur-xl border border-border/50;
   }
 
   .glass-card {
-    @apply bg-card/90 backdrop-blur-2xl border border-border shadow-2xl transition-all duration-300;
+    @apply bg-card/95 backdrop-blur-2xl border border-border shadow-soft transition-all duration-300;
   }
 
+  /* BloomFi Card Styles */
+  .bloom-card {
+    @apply bg-card rounded-3xl border border-border shadow-soft transition-all duration-300 overflow-hidden;
+  }
+
+  .bloom-card:hover {
+    @apply shadow-soft-lg border-primary/20 -translate-y-1;
+  }
+
+  .bloom-card-dark {
+    @apply bg-navy text-white rounded-3xl border border-white/10 shadow-soft transition-all duration-300 overflow-hidden;
+  }
+
+  .bloom-card-dark:hover {
+    @apply shadow-soft-lg border-primary/30 -translate-y-1;
+  }
+
+  /* Bento Grid Cards */
+  .bento-card {
+    @apply bg-card rounded-3xl border border-border p-6 md:p-8 transition-all duration-300 hover:shadow-soft-lg hover:border-primary/20 hover:-translate-y-1;
+  }
+
+  .bento-card-featured {
+    @apply bg-gradient-to-br from-lavender-soft to-white rounded-3xl border border-primary/20 p-6 md:p-8 transition-all duration-300 hover:shadow-glow hover:-translate-y-1;
+  }
+
+  .bento-card-navy {
+    @apply bg-navy text-white rounded-3xl border border-white/10 p-6 md:p-8 transition-all duration-300 hover:shadow-soft-lg hover:border-primary/30 hover:-translate-y-1;
+  }
+
+  /* Premium card variants preserved */
   .premium-card {
-    @apply bg-card/60 border border-border rounded-2xl transition-all duration-300 shadow-lg relative overflow-hidden backdrop-blur-sm;
+    @apply bg-card/60 border border-border rounded-2xl transition-all duration-300 shadow-soft relative overflow-hidden backdrop-blur-sm;
   }
 
   .premium-card:hover {
-    @apply bg-card/80 border-primary/30 shadow-xl translate-y-[-4px];
+    @apply bg-card/80 border-primary/30 shadow-soft-lg translate-y-[-4px];
   }
 
   .hover-lift {
@@ -133,12 +176,34 @@
     @apply active:scale-95 transition-transform duration-100;
   }
 
+  /* BloomFi Gradient Text */
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-br from-foreground via-foreground/90 to-foreground/60;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-primary;
+  }
+
+  .gradient-text-navy {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70;
   }
 
   .gradient-primary {
-    @apply bg-gradient-to-br from-primary to-primary/80 hover:to-primary transition-all duration-300 shadow-lg shadow-primary/20;
+    @apply bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 transition-all duration-300 shadow-glow;
+  }
+
+  /* BloomFi Button Styles */
+  .bloom-btn {
+    @apply px-6 py-3 rounded-full font-semibold transition-all duration-300;
+  }
+
+  .bloom-btn-primary {
+    @apply bloom-btn bg-navy text-white hover:bg-navy-light shadow-soft hover:shadow-soft-lg;
+  }
+
+  .bloom-btn-outline {
+    @apply bloom-btn bg-transparent border-2 border-border hover:border-primary hover:text-primary;
+  }
+
+  .bloom-btn-launch {
+    @apply bloom-btn bg-gradient-to-r from-primary to-purple-500 text-white shadow-glow hover:shadow-glow-lg hover:scale-105;
   }
 
   /* Calm & Premium Card Variants */
@@ -149,7 +214,7 @@
 
   .card-indigo:hover {
     background: linear-gradient(145deg, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0.08) 100%);
-    @apply border-indigo-500/30 shadow-lg shadow-indigo-500/10;
+    @apply border-indigo-500/30 shadow-soft shadow-indigo-500/10;
   }
 
   .card-indigo .icon-box {
@@ -163,7 +228,7 @@
 
   .card-teal:hover {
     background: linear-gradient(145deg, rgba(20, 184, 166, 0.2) 0%, rgba(20, 184, 166, 0.08) 100%);
-    @apply border-teal-500/30 shadow-lg shadow-teal-500/10;
+    @apply border-teal-500/30 shadow-soft shadow-teal-500/10;
   }
 
   .card-teal .icon-box {
@@ -177,7 +242,7 @@
 
   .card-rose:hover {
     background: linear-gradient(145deg, rgba(244, 63, 94, 0.2) 0%, rgba(244, 63, 94, 0.08) 100%);
-    @apply border-rose-500/30 shadow-lg shadow-rose-500/10;
+    @apply border-rose-500/30 shadow-soft shadow-rose-500/10;
   }
 
   .card-rose .icon-box {
@@ -191,7 +256,7 @@
 
   .card-amber:hover {
     background: linear-gradient(145deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.08) 100%);
-    @apply border-amber-500/30 shadow-lg shadow-amber-500/10;
+    @apply border-amber-500/30 shadow-soft shadow-amber-500/10;
   }
 
   .card-amber .icon-box {
@@ -205,7 +270,7 @@
 
   .card-violet:hover {
     background: linear-gradient(145deg, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0.08) 100%);
-    @apply border-violet-500/30 shadow-lg shadow-violet-500/10;
+    @apply border-violet-500/30 shadow-soft shadow-violet-500/10;
   }
 
   .card-violet .icon-box {
@@ -219,14 +284,14 @@
 
   .card-emerald:hover {
     background: linear-gradient(145deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.08) 100%);
-    @apply border-emerald-500/30 shadow-lg shadow-emerald-500/10;
+    @apply border-emerald-500/30 shadow-soft shadow-emerald-500/10;
   }
 
   .card-emerald .icon-box {
     @apply bg-emerald-500/10 text-emerald-400;
   }
 
-  /* Navigation Color Classes - Refined for Theme Awareness */
+  /* Navigation Color Classes */
   .nav-violet {
     @apply bg-violet-500/15 border-violet-500/30 text-violet-700;
   }
@@ -295,6 +360,10 @@
 }
 
 .font-display {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+.font-sans {
   font-family: 'Inter', system-ui, sans-serif;
 }
 
