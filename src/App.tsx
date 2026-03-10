@@ -31,6 +31,7 @@ import AdminAcademics from "./pages/admin/AdminAcademics";
 import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminCounselors from "./pages/admin/AdminCounselors";
+import AdminVendors from "./pages/admin/AdminVendors";
 import CounselorLogin from "./pages/counselor/CounselorLogin";
 import CounselorHome from "./pages/counselor/CounselorHome";
 import CounselorStudents from "./pages/counselor/CounselorStudents";
