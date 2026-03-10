@@ -59,5 +59,6 @@ export const counselorNavItems: NavItem[] = [
     { path: "/counselor", icon: Home, label: "Dashboard", colorClass: "nav-rose" },
     { path: "/counselor/students", icon: Users, label: "My Students", colorClass: "nav-blue" },
     { path: "/counselor/chats", icon: MessageCircle, label: "Messages", colorClass: "nav-indigo" },
+    { path: "/counselor/vendors", icon: Store, label: "Vendors", colorClass: "nav-orange" },
     { path: "/counselor/profile", icon: User, label: "Profile", colorClass: "nav-amber" },
 ];
