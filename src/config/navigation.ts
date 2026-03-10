@@ -12,7 +12,8 @@ import {
     ClipboardCheck,
     Wallet,
     LucideIcon,
-    Shield
+    Shield,
+    Store
 } from "lucide-react";
 
 export interface NavItem {
