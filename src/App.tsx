@@ -24,6 +24,7 @@ import FacultyClasses from "./pages/faculty/FacultyClasses";
 import FacultyAttendance from "./pages/faculty/FacultyAttendance";
 import FacultyNotices from "./pages/faculty/FacultyNotices";
 import FacultyProfile from "./pages/faculty/FacultyProfile";
+import FacultyVendors from "./pages/faculty/FacultyVendors";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAcademics from "./pages/admin/AdminAcademics";
