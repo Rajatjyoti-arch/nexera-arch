@@ -17,23 +17,27 @@ import StudentNetwork from "./pages/student/StudentNetwork";
 import StudentWellness from "./pages/student/StudentWellness";
 import StudentProfile from "./pages/student/StudentProfile";
 import Vani from "./pages/student/Vani";
+import StudentVendors from "./pages/student/StudentVendors";
 import FacultyHome from "./pages/faculty/FacultyHome";
 import FacultyChats from "./pages/faculty/FacultyChats";
 import FacultyClasses from "./pages/faculty/FacultyClasses";
 import FacultyAttendance from "./pages/faculty/FacultyAttendance";
 import FacultyNotices from "./pages/faculty/FacultyNotices";
 import FacultyProfile from "./pages/faculty/FacultyProfile";
+import FacultyVendors from "./pages/faculty/FacultyVendors";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAcademics from "./pages/admin/AdminAcademics";
 import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminCounselors from "./pages/admin/AdminCounselors";
+import AdminVendors from "./pages/admin/AdminVendors";
 import CounselorLogin from "./pages/counselor/CounselorLogin";
 import CounselorHome from "./pages/counselor/CounselorHome";
 import CounselorStudents from "./pages/counselor/CounselorStudents";
 import CounselorChats from "./pages/counselor/CounselorChats";
 import CounselorProfile from "./pages/counselor/CounselorProfile";
+import CounselorVendors from "./pages/counselor/CounselorVendors";
 import Portals from "./pages/Portals";
 import About from "./pages/About";
 import Team from "./pages/Team";
@@ -110,6 +114,7 @@ const AppRoutes = () => {
         <Route path="/student/wellness" element={<ProtectedRoute allowedRole="student"><StudentWellness /></ProtectedRoute>} />
         <Route path="/student/profile" element={<ProtectedRoute allowedRole="student"><StudentProfile /></ProtectedRoute>} />
         <Route path="/student/vani" element={<ProtectedRoute allowedRole="student"><Vani /></ProtectedRoute>} />
+        <Route path="/student/vendors" element={<ProtectedRoute allowedRole="student"><StudentVendors /></ProtectedRoute>} />
 
         {/* Faculty Routes */}
         <Route path="/faculty" element={<ProtectedRoute allowedRole="faculty"><FacultyHome /></ProtectedRoute>} />
@@ -118,6 +123,7 @@ const AppRoutes = () => {
         <Route path="/faculty/classes" element={<ProtectedRoute allowedRole="faculty"><FacultyClasses /></ProtectedRoute>} />
         <Route path="/faculty/notices" element={<ProtectedRoute allowedRole="faculty"><FacultyNotices /></ProtectedRoute>} />
         <Route path="/faculty/profile" element={<ProtectedRoute allowedRole="faculty"><FacultyProfile /></ProtectedRoute>} />
+        <Route path="/faculty/vendors" element={<ProtectedRoute allowedRole="faculty"><FacultyVendors /></ProtectedRoute>} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<ProtectedRoute allowedRole="admin"><AdminDashboard /></ProtectedRoute>} />
@@ -126,12 +132,14 @@ const AppRoutes = () => {
         <Route path="/admin/academics" element={<ProtectedRoute allowedRole="admin"><AdminAcademics /></ProtectedRoute>} />
         <Route path="/admin/announcements" element={<ProtectedRoute allowedRole="admin"><AdminAnnouncements /></ProtectedRoute>} />
         <Route path="/admin/reports" element={<ProtectedRoute allowedRole="admin"><AdminReports /></ProtectedRoute>} />
+        <Route path="/admin/vendors" element={<ProtectedRoute allowedRole="admin"><AdminVendors /></ProtectedRoute>} />
 
         {/* Counselor Routes */}
         <Route path="/counselor" element={<ProtectedRoute allowedRole="counselor"><CounselorHome /></ProtectedRoute>} />
         <Route path="/counselor/students" element={<ProtectedRoute allowedRole="counselor"><CounselorStudents /></ProtectedRoute>} />
         <Route path="/counselor/chats" element={<ProtectedRoute allowedRole="counselor"><CounselorChats /></ProtectedRoute>} />
         <Route path="/counselor/profile" element={<ProtectedRoute allowedRole="counselor"><CounselorProfile /></ProtectedRoute>} />
+        <Route path="/counselor/vendors" element={<ProtectedRoute allowedRole="counselor"><CounselorVendors /></ProtectedRoute>} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

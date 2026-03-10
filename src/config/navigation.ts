@@ -12,7 +12,8 @@ import {
     ClipboardCheck,
     Wallet,
     LucideIcon,
-    Shield
+    Shield,
+    Store
 } from "lucide-react";
 
 export interface NavItem {
@@ -30,6 +31,7 @@ export const studentNavItems: NavItem[] = [
     { path: "/student/network", icon: Users, label: "Network", colorClass: "nav-teal" },
     { path: "/student/wellness", icon: Heart, label: "Wellness", colorClass: "nav-rose" },
     { path: "/student/vani", icon: Shield, label: "Vani", colorClass: "nav-purple" },
+    { path: "/student/vendors", icon: Store, label: "Vendors", colorClass: "nav-orange" },
     { path: "/student/profile", icon: User, label: "Profile", colorClass: "nav-amber" },
 ];
 
@@ -39,6 +41,7 @@ export const facultyNavItems: NavItem[] = [
     { path: "/faculty/classes", icon: GraduationCap, label: "Classes", colorClass: "nav-cyan" },
     { path: "/faculty/chats", icon: MessageCircle, label: "Chats", colorClass: "nav-indigo" },
     { path: "/faculty/notices", icon: Bell, label: "Notices", colorClass: "nav-amber" },
+    { path: "/faculty/vendors", icon: Store, label: "Vendors", colorClass: "nav-orange" },
     { path: "/faculty/profile", icon: User, label: "Profile", colorClass: "nav-slate" },
 ];
 
@@ -49,11 +52,13 @@ export const adminNavItems: NavItem[] = [
     { path: "/admin/academics", icon: GraduationCap, label: "Academics Setup", colorClass: "nav-amber" },
     { path: "/admin/announcements", icon: Megaphone, label: "Announcements", colorClass: "nav-orange" },
     { path: "/admin/reports", icon: AlertTriangle, label: "Reports", colorClass: "nav-red" },
+    { path: "/admin/vendors", icon: Store, label: "Vendors", colorClass: "nav-teal" },
 ];
 
 export const counselorNavItems: NavItem[] = [
     { path: "/counselor", icon: Home, label: "Dashboard", colorClass: "nav-rose" },
     { path: "/counselor/students", icon: Users, label: "My Students", colorClass: "nav-blue" },
     { path: "/counselor/chats", icon: MessageCircle, label: "Messages", colorClass: "nav-indigo" },
+    { path: "/counselor/vendors", icon: Store, label: "Vendors", colorClass: "nav-orange" },
     { path: "/counselor/profile", icon: User, label: "Profile", colorClass: "nav-amber" },
 ];
