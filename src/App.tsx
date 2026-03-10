@@ -37,6 +37,7 @@ import CounselorHome from "./pages/counselor/CounselorHome";
 import CounselorStudents from "./pages/counselor/CounselorStudents";
 import CounselorChats from "./pages/counselor/CounselorChats";
 import CounselorProfile from "./pages/counselor/CounselorProfile";
+import CounselorVendors from "./pages/counselor/CounselorVendors";
 import Portals from "./pages/Portals";
 import About from "./pages/About";
 import Team from "./pages/Team";
