@@ -31,6 +31,7 @@ export const studentNavItems: NavItem[] = [
     { path: "/student/network", icon: Users, label: "Network", colorClass: "nav-teal" },
     { path: "/student/wellness", icon: Heart, label: "Wellness", colorClass: "nav-rose" },
     { path: "/student/vani", icon: Shield, label: "Vani", colorClass: "nav-purple" },
+    { path: "/student/vendors", icon: Store, label: "Vendors", colorClass: "nav-orange" },
     { path: "/student/profile", icon: User, label: "Profile", colorClass: "nav-amber" },
 ];
 
