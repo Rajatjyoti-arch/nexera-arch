@@ -17,6 +17,7 @@ import StudentNetwork from "./pages/student/StudentNetwork";
 import StudentWellness from "./pages/student/StudentWellness";
 import StudentProfile from "./pages/student/StudentProfile";
 import Vani from "./pages/student/Vani";
+import StudentVendors from "./pages/student/StudentVendors";
 import FacultyHome from "./pages/faculty/FacultyHome";
 import FacultyChats from "./pages/faculty/FacultyChats";
 import FacultyClasses from "./pages/faculty/FacultyClasses";
