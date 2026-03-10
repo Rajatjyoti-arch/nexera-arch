@@ -41,6 +41,7 @@ export const facultyNavItems: NavItem[] = [
     { path: "/faculty/classes", icon: GraduationCap, label: "Classes", colorClass: "nav-cyan" },
     { path: "/faculty/chats", icon: MessageCircle, label: "Chats", colorClass: "nav-indigo" },
     { path: "/faculty/notices", icon: Bell, label: "Notices", colorClass: "nav-amber" },
+    { path: "/faculty/vendors", icon: Store, label: "Vendors", colorClass: "nav-orange" },
     { path: "/faculty/profile", icon: User, label: "Profile", colorClass: "nav-slate" },
 ];
 
