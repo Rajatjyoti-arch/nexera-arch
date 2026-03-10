@@ -52,6 +52,7 @@ export const adminNavItems: NavItem[] = [
     { path: "/admin/academics", icon: GraduationCap, label: "Academics Setup", colorClass: "nav-amber" },
     { path: "/admin/announcements", icon: Megaphone, label: "Announcements", colorClass: "nav-orange" },
     { path: "/admin/reports", icon: AlertTriangle, label: "Reports", colorClass: "nav-red" },
+    { path: "/admin/vendors", icon: Store, label: "Vendors", colorClass: "nav-teal" },
 ];
 
 export const counselorNavItems: NavItem[] = [
