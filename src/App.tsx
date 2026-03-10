@@ -123,6 +123,7 @@ const AppRoutes = () => {
         <Route path="/faculty/classes" element={<ProtectedRoute allowedRole="faculty"><FacultyClasses /></ProtectedRoute>} />
         <Route path="/faculty/notices" element={<ProtectedRoute allowedRole="faculty"><FacultyNotices /></ProtectedRoute>} />
         <Route path="/faculty/profile" element={<ProtectedRoute allowedRole="faculty"><FacultyProfile /></ProtectedRoute>} />
+        <Route path="/faculty/vendors" element={<ProtectedRoute allowedRole="faculty"><FacultyVendors /></ProtectedRoute>} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<ProtectedRoute allowedRole="admin"><AdminDashboard /></ProtectedRoute>} />
